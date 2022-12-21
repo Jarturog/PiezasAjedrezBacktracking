@@ -16,15 +16,15 @@ package gráficos;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.geom.Rectangle2D;
+import java.awt.geom.Rectangle2D.Float;
 
 class Casilla {
     
-    private Rectangle2D.Float rec;
+    private Float rec;
     private Color color;
-    private Boolean ocupada;
+    private boolean ocupada;
 
-    public Casilla(Rectangle2D.Float r, Color c, Boolean ocupada ) {
+    public Casilla(Float r, Color c, boolean ocupada ) {
         this.rec = r;
         this.color = c;
         this.ocupada = ocupada;
@@ -32,9 +32,17 @@ class Casilla {
 
     public void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(this.color);
+        g2d.setColor(color);
         g2d.drawRect(0, 0, 150,150);
-        g2d.fill(this.rec);
+        g2d.fill(rec);
+    }
+    
+    public boolean estaOcupada(){
+        return ocupada;
+    }
+    
+    public void setOcupada(boolean b){
+        ocupada = b;
     }
 
 }
