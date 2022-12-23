@@ -2,10 +2,7 @@ package piezas;
 
 import gráficos.Vector2D;
 import gráficos.Tablero;
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
 
 /**
  *
@@ -14,76 +11,57 @@ import java.util.Stack;
 public abstract class Pieza {
 
     public abstract Vector2D[] movimientos();
-    public abstract int pos;
+    private Vector2D posicion;
+    private static Vector2D[] movs;
 
     public Pieza(Vector2D posInicial) {
-        posicion = posInicial;
+        posicion = new Vector2D(posInicial);
     }
 
-    public void mover(Tablero t, Vector2D pos) throws Exception {
-        t.ocuparPosicion(pos);
-        posicion.sumar(pos);
-    }
-
-    public boolean canMove(Tablero t, Vector2D pos, Vector2D mov) {
-        Vector2D res = new Vector2D(pos);
-        res.sumar(mov);
-        return !(res.getX() > t.getDIMENSIO() - 1 || res.getY() > t.getDIMENSIO() - 1 || res.getX() < 0 || res.getY() < 0);
-    }
-
-    public void recorrerTablero(Tablero t, Vector2D posicion) {
-        rRecorrerTablero(new Tablero(8), new int[movimientos().length], 0, posicion);
-    }
-
-    private void rRecorrerTablero(Tablero t, int[] movs, int indMov, Vector2D posicion) {
-        movs[indMov] = -1;
-        while (movs[indMov] < movs.length - 1) {
-            movs[indMov]++;
-            if (canMove(t, posicion, movs[indMov])) {
-                if (indMov > movs.length - 2) {
-                    
-                } else {
-                    rRecorrerTablero(t, movs, indMov + 1, posicion);
-                }
-            }
-        }
-        movs[indMov] = -1;
-    }
-
-    public static void iRecorrerTablero(Tablero t) {
-
-    }
-    public static ArrayList nShits(Tablero t, Pieza p){
-        ArrayList solucions = new ArrayList();
-        recursiveNQueens(new int[t.DIMENSION], 0, solucions);
-        if(solucions.isEmpty()){
-            return null;
-        }
-        return solucions;
+    public void mover(Tablero t, Vector2D movimiento) throws Exception {
+        posicion = Vector2D.sumar(posicion, movimiento);
+        t.ocuparPosicion(movimiento);
     }
     
-    public static Vector2D sigCasilla(Vector2D posi, Vector2D mov){
-        posi.sumar(mov);
-        return posi;
+    public void volverAtras(Tablero t, Vector2D movimientoRealizado) throws Exception{
+        t.desOcuparPosicion(posicion);
+        posicion = Vector2D.sumar(posicion, Vector2D.multiplicar(movimientoRealizado, -1));
     }
-    
-    private static void recursiveNShits(Tablero t, Vector2D []moviments, Vector2D posi, LinkedList<Vector2D> solucion) throws Exception{
-        int indMov = 0;
-        solucion.push(posi);
-        t.ocuparPosicion(posi);
-        while(indMov < moviments.length){
-            indMov++;
-            if(t.casillaLibre(moviments[indMov])){
-                if(t.casillasVisitadas > t.getNumCasillas() - 1){ // t.casillasVisitadas+1 > t.length*t.length - 2
+
+    public boolean movimientoLegal(Tablero t, Vector2D futuraPosicion) {
+        return !(futuraPosicion.getX() > t.getDIMENSION() - 1
+                || futuraPosicion.getY() > t.getDIMENSION() - 1
+                || futuraPosicion.getX() < 0 || futuraPosicion.getY() < 0);
+    }
+
+    public void recorrerTablero(Tablero t) throws Exception {
+        rRecorrerTablero(t, new LinkedList<Vector2D>(), new Vector2D(0,0));
+    }
+
+    private void rRecorrerTablero(Tablero t, LinkedList<Vector2D> solucion, Vector2D mov) throws Exception {
+        mover(t, mov); // mueve la pieza a la nueva posición
+        solucion.push(new Vector2D(posicion)); // guarda la posición actual en la solución
+        // indMov es el índice que recorre los movimientos de la pieza
+        for (int indMov = 0; indMov < movs.length; indMov++) {
+            // se calcula la hipotética futura posición
+            Vector2D futuraPosicion = Vector2D.sumar(posicion, movs[indMov]); 
+            // si la casilla que ocuparía está libre y no se sale del tablero
+            if (t.casillaLibre(futuraPosicion) && movimientoLegal(t, futuraPosicion)) {
+                // si no ha recorrido todo el tablero
+                if (t.getCasillasVisitadas() > t.getNumCasillas() - 1) {
                     t.visualizar(solucion);
                     return;
-                } else {
-                    recursiveNShits(t, moviments, sigCasilla(posi, moviments[indMov]), solucion);
+                } else { // en caso contrario sigue recorriendo el tablero
+                    rRecorrerTablero(t, solucion, movs[indMov]);
                 }
             }
         }
-        solucion.pop();
-        t.desOcuparPosicion(posi);
-        //moviments[indMov] = -1;
+        // si llega aquí es porque no era parte de la solución
+        solucion.pop(); // quita el movimiento de la solución
+        volverAtras(t, mov); // revierte el movimiento volviendo atrás
+    }
+    
+    public void iRecorrerTablero(Tablero t) {
+        // transformación a iterativo
     }
 }

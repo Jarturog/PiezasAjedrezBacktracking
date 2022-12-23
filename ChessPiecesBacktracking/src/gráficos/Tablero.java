@@ -1,22 +1,18 @@
 package gráficos;
 
 import java.util.LinkedList;
-
-/**
- *
- * @author miquelmascaro
- */
-import javax.swing.*;
+//import javax.swing.*;
 import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.geom.Rectangle2D.Float;
+import javax.swing.JPanel;
 
 public class Tablero extends JPanel {
 
     private final int DIMENSION;
     private static final int MAXIMO = 800;
-    private static final int LADO = MAXIMO / DIMENSION;
+    private final int LADO;
     private static final Color BLANCO = Color.WHITE;
     private static final Color NEGRO = Color.BLACK;
 
@@ -26,6 +22,7 @@ public class Tablero extends JPanel {
     public Tablero(int d) {
         casillasVisitadas = 0;
         DIMENSION = d;
+        LADO = MAXIMO / DIMENSION;
         t = new Casilla[DIMENSION][DIMENSION];
         for (int i = 0; i < DIMENSION; i++) {
             for (int j = 0; j < DIMENSION; j++) {

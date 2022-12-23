@@ -3,10 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/jartu/Documents/NetBeansProjects/ChessPiecesBacktracking/src/chesspiecesbacktracking/ChessPiecesBacktracking.java</file>
-            <file>file:/C:/Users/jartu/Documents/NetBeansProjects/ChessPiecesBacktracking/src/chesspiecesbacktracking/Caballo.java</file>
-            <file>file:/C:/Users/jartu/Documents/NetBeansProjects/ChessPiecesBacktracking/src/chesspiecesbacktracking/VentanaGrafica.java</file>
-            <file>file:/C:/Users/jartu/Documents/NetBeansProjects/ChessPiecesBacktracking/src/chesspiecesbacktracking/Pieza.java</file>
+            <file>file:/C:/Users/jartu/Documents/GitHub/PiezasAjedrezBacktracking/ChessPiecesBacktracking/src/piezas/Pieza.java</file>
+            <file>file:/C:/Users/jartu/Documents/GitHub/PiezasAjedrezBacktracking/ChessPiecesBacktracking/src/gráficos/Casilla.java</file>
+            <file>file:/C:/Users/jartu/Documents/GitHub/PiezasAjedrezBacktracking/ChessPiecesBacktracking/src/gráficos/VentanaGrafica.java</file>
+            <file>file:/C:/Users/jartu/Documents/GitHub/PiezasAjedrezBacktracking/ChessPiecesBacktracking/src/piezas/Caballo.java</file>
+            <file>file:/C:/Users/jartu/Documents/GitHub/PiezasAjedrezBacktracking/ChessPiecesBacktracking/src/gráficos/Tablero.java</file>
+            <file>file:/C:/Users/jartu/Documents/GitHub/PiezasAjedrezBacktracking/ChessPiecesBacktracking/src/piezas/Alfil.java</file>
+            <file>file:/C:/Users/jartu/Documents/GitHub/PiezasAjedrezBacktracking/ChessPiecesBacktracking/src/gráficos/Vector2D.java</file>
         </group>
     </open-files>
 </project-private>

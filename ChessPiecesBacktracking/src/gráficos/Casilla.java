@@ -1,18 +1,5 @@
-/*
- * Classe casella
- *
- * El constructor defineix una casella com un rectangle d'un color i si està
- * ocupada o no
- *
- * El mètode paintComponent pinta el rectangle de la casella
- */
-
 package gráficos;
 
-/**
- *
- * @author miquelmascaro
- */
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
