@@ -1,12 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package gráficos;
 
 /**
  *
- * @author jartu
+ * @author Arturo y Marta
  */
 public class Vector2D {
 

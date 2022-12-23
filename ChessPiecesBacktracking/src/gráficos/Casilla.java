@@ -5,6 +5,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 
+/**
+ * 
+ * @author Arturo y Marta
+ */
 class Casilla {
     
     private final int LADO;

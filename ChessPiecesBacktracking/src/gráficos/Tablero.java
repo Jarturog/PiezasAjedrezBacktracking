@@ -1,13 +1,15 @@
 package gráficos;
 
 import java.util.LinkedList;
-//import javax.swing.*;
 import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.geom.Rectangle2D.Float;
 import javax.swing.JPanel;
 
+/**
+ * 
+ * @author Arturo y Marta
+ */
 public class Tablero extends JPanel {
 
     private final int DIMENSION;
