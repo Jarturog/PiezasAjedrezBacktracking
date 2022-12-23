@@ -12,28 +12,23 @@ public class Tablero extends JPanel {
 
     private final int DIMENSION;
     private static final int MAXIMO = 800;
-    private final int LADO;
-    private static final Color BLANCO = Color.WHITE;
-    private static final Color NEGRO = Color.BLACK;
-
     private Casilla t[][];
     private int casillasVisitadas;
 
     public Tablero(int d) {
         casillasVisitadas = 0;
         DIMENSION = d;
-        LADO = MAXIMO / DIMENSION;
+        final int LADO_CASILLA = MAXIMO / DIMENSION;
         t = new Casilla[DIMENSION][DIMENSION];
         for (int i = 0; i < DIMENSION; i++) {
             for (int j = 0; j < DIMENSION; j++) {
                 Color col;
                 if ((i % 2 == 1 && j % 2 == 1) || (i % 2 == 0 && j % 2 == 0)) {
-                    col = BLANCO;
+                    col = Color.WHITE;
                 } else {
-                    col = NEGRO;
+                    col = Color.BLACK;
                 }
-                t[i][j] = new Casilla(new Float(j * LADO, i * LADO, LADO, LADO),
-                        col, false);
+                t[i][j] = new Casilla(i,j,col, false,LADO_CASILLA);
             }
         }
     }
@@ -54,19 +49,30 @@ public class Tablero extends JPanel {
 
     public void ocuparPosicion(Vector2D pos) throws Exception {
         if (!casillaLibre(pos)) {
-            throw new Exception();
+            throw new Exception("Error ocupando una casilla que no está libre");
         }
         t[pos.getX()][pos.getY()].setOcupada(true);
+        casillasVisitadas++;
     }
 
     public void desOcuparPosicion(Vector2D pos) throws Exception {
         if (casillaLibre(pos)) {
-            throw new Exception();
+            throw new Exception("Error desocupando una casilla ya libre");
         }
         t[pos.getX()][pos.getY()].setOcupada(false);
+        casillasVisitadas--;
+    }
+    
+    public boolean movimientoLegal(Vector2D futuraPosicion) {
+        return !(futuraPosicion.getX() > DIMENSION - 1
+                || futuraPosicion.getY() > DIMENSION - 1
+                || futuraPosicion.getX() < 0 || futuraPosicion.getY() < 0);
     }
 
-    public boolean casillaLibre(Vector2D pos) {
+    public boolean casillaLibre(Vector2D pos) throws Exception {
+        if(!movimientoLegal(pos)){
+            throw new Exception("Error comprobando si una casilla inexistente está libre");
+        }
         return !t[pos.getX()][pos.getY()].estaOcupada();
     }
 

@@ -1,6 +1,7 @@
 package gráficos;
 
 import javax.swing.JFrame;
+import piezas.Caballo;
 
 /**
  *
@@ -20,8 +21,11 @@ public class VentanaGrafica extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    public static void main(String[] args) {
-        VentanaGrafica esc = new VentanaGrafica();
-        esc.setVisible(true);
+    public static void main(String[] args) throws Exception {
+        VentanaGrafica ventana = new VentanaGrafica();
+        ventana.setVisible(true);
+        Caballo caballo = new Caballo(new Vector2D(ventana.tablero.getDIMENSION() / 2,
+                ventana.tablero.getDIMENSION() / 2));
+        caballo.recorrerTablero(ventana.tablero);
     }
 }
