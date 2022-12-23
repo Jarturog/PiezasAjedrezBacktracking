@@ -1,7 +1,7 @@
 package piezas;
 
-import gráficos.Vector2D;
-import gráficos.Tablero;
+import elementosBidimensionales.Vector2D;
+import elementosBidimensionales.Tablero;
 import java.util.LinkedList;
 
 /**

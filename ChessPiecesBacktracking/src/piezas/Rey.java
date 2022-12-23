@@ -1,6 +1,6 @@
 package piezas;
 
-import gráficos.Vector2D;
+import elementosBidimensionales.Vector2D;
 
 /**
  *

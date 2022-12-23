@@ -1,4 +1,4 @@
-package gráficos;
+package elementosBidimensionales;
 
 /**
  *
