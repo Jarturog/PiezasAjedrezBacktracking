@@ -18,4 +18,9 @@ public class Peon extends Pieza {
             new Vector2D(1, -1), new Vector2D(-1, -1), // matar en diagonal color 2
             new Vector2D(0, 2), new Vector2D(0, -2)}; // primer movimiento
     }
+
+    @Override
+    public String imagenPieza() {
+        return "pieza.png";
+    }
 }

@@ -22,6 +22,6 @@ public class Caballo extends Pieza {
 
     @Override
     public String imagenPieza() {
-        return "Caballo.png";
+        return "caballo.png";
     }
 }

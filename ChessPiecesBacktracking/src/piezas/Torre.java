@@ -17,4 +17,9 @@ public class Torre extends Pieza {
         return new Vector2D[]{new Vector2D(1, 0), new Vector2D(0, 1),
             new Vector2D(-1, 0), new Vector2D(0, -1)};
     }
+
+    @Override
+    public String imagenPieza() {
+        return "torre.png";
+    }
 }
