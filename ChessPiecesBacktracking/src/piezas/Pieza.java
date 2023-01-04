@@ -3,6 +3,7 @@ package piezas;
 import elementosBidimensionales.Casilla;
 import elementosBidimensionales.Vector2D;
 import elementosBidimensionales.Tablero;
+import java.awt.Image;
 import java.util.LinkedList;
 import javax.swing.ImageIcon;
 
@@ -12,7 +13,7 @@ import javax.swing.ImageIcon;
  */
 public abstract class Pieza {
 
-    private final static String CASILLA_VISITADA = "visitada.png";
+    private final static String CASILLA_VISITADA = "casillaVisitada.png";
     public abstract Vector2D[] movimientos();
     private final Vector2D[] movimientos;
     public abstract String imagenPieza();
@@ -28,11 +29,20 @@ public abstract class Pieza {
         movimientos = movimientos();
         imagenPieza = imagenPieza();
     }
+    private ImageIcon redimensionarImagen(ImageIcon imagen) {
+        
+        Image image = imagen.getImage(); // transforma ImageIcon a image
+        Image newimg = image.getScaledInstance(115, 115, java.awt.Image.SCALE_DEFAULT);
+        imagen = new ImageIcon(newimg);  // transforma  Image a imageIcon
+        return imagen;
+    }
 
     private void dibujar(Tablero tablero, String nombreImagen) throws Exception {
         ImageIcon iconoImagen = new ImageIcon(new ImageIcon(nombreImagen).getImage().getScaledInstance(115, 115, java.awt.Image.SCALE_DEFAULT));
         Casilla c = tablero.getCasilla(posicion);
         c.setImagen(iconoImagen);
+//         ImageIcon iconoImagen = new ImageIcon(nombreImagen);
+//        redimensionarImagen(iconoImagen);
     }
 
     public void mover(Tablero t, Vector2D movimiento) throws Exception {

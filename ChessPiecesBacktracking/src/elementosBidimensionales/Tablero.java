@@ -38,14 +38,7 @@ public class Tablero extends JPanel {
         }
     }
 
-//    @Override
-//    public void paintComponent(Graphics g) {
-//        for (int i = 0; i < DIMENSION; i++) {
-//            for (int j = 0; j < DIMENSION; j++) {
-//                casillas[i][j].paintComponent(g);
-//            }
-//        }
-//    }
+
     private int getIndexCasilla(Vector2D v) {
         return v.getX() + v.getY() * DIMENSION;
     }

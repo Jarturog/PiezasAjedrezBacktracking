@@ -36,7 +36,7 @@ public class Ajedrez {
     
     public Ajedrez() {
         ventana = new JFrame("Ajedrez");
-        ventana.setPreferredSize(new Dimension(640, 640));
+        ventana.setPreferredSize(new Dimension(920, 920));
         ventana.getContentPane().setLayout(new BorderLayout());
 
         tablero = new Tablero(DIMENSIONES);
@@ -44,7 +44,7 @@ public class Ajedrez {
 //        tablero.setOpaque(true);
         ventana.getContentPane().add(tablero, java.awt.BorderLayout.CENTER);
 
-//        ventana.setLocationRelativeTo(null);
+        ventana.setLocationRelativeTo(null);
         ventana.pack();
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventana.setVisible(true);
