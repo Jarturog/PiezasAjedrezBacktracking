@@ -20,8 +20,6 @@ public class Ajedrez {
 
     private JFrame ventana;
     private Tablero tablero;
-    private JPanel panelRecorridos;
-
     private final int DIMENSIONES = 8;
 
     public static void main(String[] args) throws Exception {
@@ -31,41 +29,26 @@ public class Ajedrez {
             System.out.println("No se ha podido establecer el formato de su plataforma" + e);
         }
         Ajedrez aj = new Ajedrez();
-        aj.visualizarRecorridoTablero();
-//        aj.visualizarRecorridoTableroMovimientosCorrectos();
+        Caballo c = new Caballo(new Vector2D(4, 4));
+        c.recorrerTablero(aj.tablero);
+//        aj.recorrerTableroMovimientosCorrectos();
     }
     
     public Ajedrez() {
         ventana = new JFrame("Ajedrez");
-        ventana.setPreferredSize(new Dimension(640, 480));
+        ventana.setPreferredSize(new Dimension(640, 640));
         ventana.getContentPane().setLayout(new BorderLayout());
 
         tablero = new Tablero(DIMENSIONES);
         tablero.setLayout(new GridLayout(DIMENSIONES, DIMENSIONES));
-        tablero.setOpaque(true);
+//        tablero.setOpaque(true);
         ventana.getContentPane().add(tablero, java.awt.BorderLayout.CENTER);
 
-        panelRecorridos = new JPanel();
-
-        ventana.setLocationRelativeTo(null);
+//        ventana.setLocationRelativeTo(null);
         ventana.pack();
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventana.setVisible(true);
 
-    }
-    
-    private void visualizarRecorridoTablero() throws Exception {
-
-//        Caballo caballo = new Caballo(new Vector2D(0)); //es una prueba
-        ImageIcon imagen = new ImageIcon("Caballo.png");
-        ImageIcon nuevaImagen = redimensionarImagen(imagen);
-
-//        casillas[1].setImagen(nuevaImagen);
-//        tablero.add(casillas[0]);
-
-        ventana.setVisible(true);
-
-//        caballo.recorrerTablero(ventana.tablero);
     }
 
 //    private void actualizarPantalla() {
@@ -73,11 +56,4 @@ public class Ajedrez {
 //
 //    }
 
-    private ImageIcon redimensionarImagen(ImageIcon imagen) {
-
-        Image image = imagen.getImage(); // transforma ImageIcon a image
-        Image newImg = image.getScaledInstance(115, 115, java.awt.Image.SCALE_DEFAULT);
-        imagen = new ImageIcon(newImg);  // transforma  Image a imageIcon
-        return imagen;
-    }
 }

@@ -12,11 +12,11 @@ import javax.swing.JLabel;
  *
  * @author Arturo y Marta
  */
-class Casilla extends JLabel {
+public class Casilla extends JLabel {
 
     private final Color color;
     private boolean ocupada;
-    private ImageIcon imagen;
+    //private ImageIcon imagen;
 
     public Casilla(Color c) {
         this.color = c;
@@ -24,13 +24,12 @@ class Casilla extends JLabel {
         setOpaque(true);
         ocupada = false;
     }
-//    public void setImagen(ImageIcon imagen){
-//        this.imagen = imagen;
-//        setBackground(color);
-//        setIcon(imagen);
-//        setOpaque(true);
-//        
-//    }
+    public void setImagen(ImageIcon imagen){
+        //this.imagen = imagen;
+        setBackground(color);
+        setIcon(imagen);
+        setOpaque(true);
+    }
 //    public Color getBackgroundColor(){
 //        return color;
 //    }

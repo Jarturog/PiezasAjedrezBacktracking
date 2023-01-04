@@ -18,7 +18,6 @@ public class Tablero extends JPanel {
 
     private final int DIMENSION = 8;
     private static final int MAXIMO = 800;
-    private Casilla t[][];
     private int casillasVisitadas;
     private Casilla[] casillas;
 
@@ -28,53 +27,38 @@ public class Tablero extends JPanel {
         for (int i = 0; i < dimensiones; i++) {
             for (int j = 0; j < dimensiones; j++) {
                 if (blanco) {
-                    casillas[i] = new Casilla(Color.WHITE);
+                    casillas[getIndexCasilla(new Vector2D(i, j))] = new Casilla(Color.WHITE);
                 } else {
-                    casillas[i] = new Casilla(Color.BLACK);
+                    casillas[getIndexCasilla(new Vector2D(i, j))] = new Casilla(Color.BLACK);
                 }
-                add(casillas[i]);
+                add(casillas[getIndexCasilla(new Vector2D(i, j))]);
                 blanco = !blanco;
             }
             blanco = !blanco;
         }
     }
 
-    public Tablero(boolean d) {
-        casillasVisitadas = 0;
-        final int LADO_CASILLA = MAXIMO / DIMENSION;
-        t = new Casilla[DIMENSION][DIMENSION];
-        for (int i = 0; i < DIMENSION; i++) {
-            for (int j = 0; j < DIMENSION; j++) {
-                Color col;
-                if ((i % 2 == 1 && j % 2 == 1) || (i % 2 == 0 && j % 2 == 0)) {
-                    col = Color.WHITE;
-                } else {
-                    col = Color.BLACK;
-                }
-                //casillas[i][j] = new Casilla(i,j,col, false,LADO_CASILLA);
-            }
-        }
+//    @Override
+//    public void paintComponent(Graphics g) {
+//        for (int i = 0; i < DIMENSION; i++) {
+//            for (int j = 0; j < DIMENSION; j++) {
+//                casillas[i][j].paintComponent(g);
+//            }
+//        }
+//    }
+    private int getIndexCasilla(Vector2D v) {
+        return v.getX() + v.getY() * DIMENSION;
     }
-
-    @Override
-    public void paintComponent(Graphics g) {
-        for (int i = 0; i < DIMENSION; i++) {
-            for (int j = 0; j < DIMENSION; j++) {
-                //casillas[i][j].paintComponent(g);
-            }
-        }
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(MAXIMO, MAXIMO);
+    
+    public Casilla getCasilla(Vector2D posicion){
+        return casillas[getIndexCasilla(posicion)];
     }
 
     public void ocuparPosicion(Vector2D pos) throws Exception {
         if (!casillaLibre(pos)) {
             throw new Exception("Error ocupando una casilla que no está libre");
         }
-        t[pos.getX()][pos.getY()].setOcupada(true);
+        casillas[getIndexCasilla(pos)].setOcupada(true);
         casillasVisitadas++;
     }
 
@@ -82,10 +66,10 @@ public class Tablero extends JPanel {
         if (casillaLibre(pos)) {
             throw new Exception("Error desocupando una casilla ya libre");
         }
-        t[pos.getX()][pos.getY()].setOcupada(false);
+        casillas[getIndexCasilla(pos)].setOcupada(false);
         casillasVisitadas--;
     }
-    
+
     public boolean movimientoLegal(Vector2D futuraPosicion) {
         return !(futuraPosicion.getX() > DIMENSION - 1
                 || futuraPosicion.getY() > DIMENSION - 1
@@ -93,10 +77,10 @@ public class Tablero extends JPanel {
     }
 
     public boolean casillaLibre(Vector2D pos) throws Exception {
-        if(!movimientoLegal(pos)){
+        if (!movimientoLegal(pos)) {
             throw new Exception("Error comprobando si una casilla inexistente está libre");
         }
-        return !t[pos.getX()][pos.getY()].estaOcupada();
+        return !casillas[getIndexCasilla(pos)].estaOcupada();
     }
 
     public int getDIMENSION() {
@@ -110,11 +94,4 @@ public class Tablero extends JPanel {
     public int getCasillasVisitadas() {
         return casillasVisitadas;
     }
-    
-    public void visualizar(LinkedList<Vector2D> movimientosRealizados) {
-        // aquí se visualizará sacando los movimientos
-        System.out.println(movimientosRealizados.getFirst()); // en vez de
-        // println se van colocando y dejando x por donde pasan
-    }
 }
-
