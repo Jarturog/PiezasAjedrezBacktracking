@@ -21,6 +21,7 @@ public class Ajedrez {
     private JFrame ventana;
     private Tablero tablero;
     private final int DIMENSIONES = 8;
+    private final static int PIXELES = 640;
 
     public static void main(String[] args) throws Exception {
         try {
@@ -36,7 +37,7 @@ public class Ajedrez {
     
     public Ajedrez() {
         ventana = new JFrame("Ajedrez");
-        ventana.setPreferredSize(new Dimension(920, 920));
+        ventana.setPreferredSize(new Dimension(PIXELES, PIXELES));
         ventana.getContentPane().setLayout(new BorderLayout());
 
         tablero = new Tablero(DIMENSIONES);
@@ -44,7 +45,7 @@ public class Ajedrez {
 //        tablero.setOpaque(true);
         ventana.getContentPane().add(tablero, java.awt.BorderLayout.CENTER);
 
-        ventana.setLocationRelativeTo(null);
+//        ventana.setLocationRelativeTo(null);
         ventana.pack();
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventana.setVisible(true);
