@@ -52,33 +52,14 @@ public class Ajedrez extends JFrame implements Runnable {
     public Ajedrez() {
         setTitle("Ajedrez");
         panelContenidos = getContentPane();
-        panelContenidos.setLayout(new CardLayout());
-
-        inicializarBotonesYPiezas();
+        panelContenidos.setLayout(new BorderLayout());
 
         tablero = new Tablero(DIMENSIONES);
         tablero.setLayout(new GridLayout(DIMENSIONES, DIMENSIONES));
-        panelContenidos.add(tablero);
-
-//        setLocationRelativeTo(null);
-        pack();
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setVisible(true);
-    }
-
-    private void inicializarBotonesYPiezas() {
-
-        panelStandBy = new JPanel();
-        panelStandBy.setLayout(new BorderLayout());
-        panelStandBy.setBackground(Color.black);
-        panelContenidos.add(panelStandBy);
-
-        ImageIcon nuevaImagen = redimensionarImagen(imagenAjedrez);
-        JLabel etiquetaImagen = new JLabel(nuevaImagen);
-
-        panelStandBy.add(etiquetaImagen, BorderLayout.CENTER);
+        panelContenidos.add(tablero, BorderLayout.CENTER);
         
         panelBotones = new JPanel();
+        panelBotones.setBackground(Color.black);
         panelBotones.setBackground(Color.black);
         panelBotones.setLayout(new GridLayout(1, 6));
         
@@ -106,7 +87,14 @@ public class Ajedrez extends JFrame implements Runnable {
 
             panelBotones.add(botonesPiezas[i]);
         }
-        panelStandBy.add(panelBotones, BorderLayout.NORTH);
+        panelContenidos.add(panelBotones, BorderLayout.NORTH);
+
+        
+        setPreferredSize(new Dimension(PIXELES, PIXELES));
+//        setLocationRelativeTo(null);
+        pack();
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
     }
 
     /**
@@ -129,7 +117,6 @@ public class Ajedrez extends JFrame implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 piezaActual = piezas[i];
-                ((CardLayout) panelContenidos.getLayout()).last(panelContenidos);
                 new Thread(esto).start();
             }
         });
@@ -144,11 +131,11 @@ public class Ajedrez extends JFrame implements Runnable {
         }
     }
 
-    private ImageIcon redimensionarImagen(ImageIcon imagen) {
-
-        Image image = imagen.getImage(); // transforma ImageIcon a image
-        Image newimg = image.getScaledInstance(PIXELES, PIXELES+40, java.awt.Image.SCALE_DEFAULT);
-        imagen = new ImageIcon(newimg);  // transforma  Image a imageIcon
-        return imagen;
-    }
+//    private ImageIcon redimensionarImagen(ImageIcon imagen) {
+//
+//        Image image = imagen.getImage(); // transforma ImageIcon a image
+//        Image newimg = image.getScaledInstance(PIXELES, PIXELES+40, java.awt.Image.SCALE_DEFAULT);
+//        imagen = new ImageIcon(newimg);  // transforma  Image a imageIcon
+//        return imagen;
+//    }
 }
