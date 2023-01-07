@@ -12,15 +12,23 @@ import piezas.Caballo;
  */
 public class Main {
     public static void main(String[] args) throws Exception {
-        try {
+//        try {
+//            javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getCrossPlatformLookAndFeelClassName());
+//        } catch (Exception e) {
+//            System.out.println("No se ha podido establecer el formato de su plataforma" + e);
+//        }
+        
+        
+         try {
             javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getCrossPlatformLookAndFeelClassName());
         } catch (Exception e) {
             System.out.println("No se ha podido establecer el formato de su plataforma" + e);
         }
         Ajedrez aj = new Ajedrez();
-//        Caballo c = new Caballo(new Vector2D(4, 4));
-//
-//        c.recorrerTablero(aj.tablero);
+        aj.visualizarRecorridoTablero("Caballo");
+
+        Caballo c = new Caballo(new Vector2D(4, 4));
+        c.recorrerTablero(aj.tablero);
 
     }
 }
