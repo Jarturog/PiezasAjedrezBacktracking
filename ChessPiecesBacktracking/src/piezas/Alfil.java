@@ -1,8 +1,7 @@
 package piezas;
 
-import elementosBidimensionales.Tablero;
-import elementosBidimensionales.Vector2D;
-import javax.swing.ImageIcon;
+import tablero.Tablero;
+import tablero.Vector2D;
 
 /**
  *
@@ -16,13 +15,18 @@ public class Alfil extends Pieza {
 
     @Override
     public Vector2D[] movimientos() {
-        return new Vector2D[]{new Vector2D(1, 1), new Vector2D(-1, 1),
-            new Vector2D(-1, 1), new Vector2D(1, -1)};
+        Vector2D array[] = new Vector2D[4 * super.getTablero().getDIMENSIONES()];
+        for (int i = 0, j = 1; i < array.length; j++) {
+            array[i++] = new Vector2D(j, j);
+            array[i++] = new Vector2D(j, -j);
+            array[i++] = new Vector2D(-j, j);
+            array[i++] = new Vector2D(-j, -j);
+        }
+        return array;
     }
 
     @Override
     public String imagenPieza() {
         return "alfil.png";
     }
-    
 }

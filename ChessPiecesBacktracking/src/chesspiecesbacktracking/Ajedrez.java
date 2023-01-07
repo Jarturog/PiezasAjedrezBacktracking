@@ -1,15 +1,14 @@
-package elementosBidimensionales;
+package chesspiecesbacktracking;
 
+import tablero.Vector2D;
+import tablero.Tablero;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -25,30 +24,30 @@ import piezas.*;
  */
 public class Ajedrez extends JFrame implements Runnable {
 
-    private final Ajedrez esto = this;
+    private final static int DIMENSIONES = 8;
+    private final static int PIXELES = 640;
+    
+    private final int NUM_PIEZAS = 7;
+    private boolean recorriendoTablero;
+    private Pieza piezaActual;
+    private final Ajedrez instancia;
     private final Container panelContenidos;
     private final Tablero tablero;
-    private final static int DIMENSIONES = 3;
-    private final static int PIXELES = 640;
-    private final int NUM_PIEZAS = 7;
-    private final JButton[] botonesPiezas = new JButton[NUM_PIEZAS];
-    private Pieza piezaActual;
+    private final JButton[] botonesPiezas;
     private final JPanel panelBotones;
-    private static boolean recorriendoTablero;
-//    private final Thread hilo;
 
     public static void main(String[] args) throws Exception {
         try {
             setLookAndFeel(getCrossPlatformLookAndFeelClassName());
         } catch (Exception e) {
-            System.out.println("No se ha podido establecer el formato de su plataforma" + e);
+            System.out.println("No se ha podido establecer el formato de su plataforma" + e.getMessage());
         }
         Ajedrez aj = new Ajedrez();
     }
 
     public Ajedrez() {
+        instancia = this;
         recorriendoTablero = false;
-//        hilo = new Thread(this);
         setTitle("Ajedrez");
         panelContenidos = getContentPane();
         panelContenidos.setLayout(new BorderLayout());
@@ -63,6 +62,7 @@ public class Ajedrez extends JFrame implements Runnable {
         panelBotones.setLayout(new GridLayout(1, NUM_PIEZAS));
         panelContenidos.add(panelBotones, BorderLayout.NORTH);
 
+        botonesPiezas = new JButton[NUM_PIEZAS];
         botonesPiezas[0] = new JButton("Peón");
         botonesPiezas[1] = new JButton("Torre");
         botonesPiezas[2] = new JButton("Caballo");
@@ -113,10 +113,10 @@ public class Ajedrez extends JFrame implements Runnable {
         botonesPiezas[i].addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                if(recorriendoTablero){
-//                    JOptionPane.showMessageDialog(null, "No se puede", "No se puede", HEIGHT);
-//                    return;
-//                }
+                if(recorriendoTablero){
+                    JOptionPane.showMessageDialog(null, "No se puede recorrer el tablero varias veces a la vez","Prohibición", HEIGHT);
+                    return;
+                }
                 boolean entradaErronea = true;
                 ImageIcon imagen = new ImageIcon(piezas[i].imagenPieza());
                 String fila = (String) JOptionPane.showInputDialog(null, "Fila donde comienza (1 - " + DIMENSIONES + "):", null, JOptionPane.INFORMATION_MESSAGE, imagen, null, "");
@@ -158,9 +158,9 @@ public class Ajedrez extends JFrame implements Runnable {
                 piezaActual.setPosicion(new Vector2D(coordX, coordY));
                 recorriendoTablero = true;
                 try {
-                    new Thread(esto).start();
-                } catch (Exception ex) {
-                    Logger.getLogger(Ajedrez.class.getName()).log(Level.SEVERE, null, ex);
+                    new Thread(instancia).start();
+                } catch (IllegalThreadStateException ex) {
+                    System.err.println("Error creando hilo para recorrer tablero: " + ex.getMessage());
                 }
             }
         });
@@ -169,14 +169,13 @@ public class Ajedrez extends JFrame implements Runnable {
     @Override
     public void run() {
         try {
-            if(piezaActual.recorrerTableroSolucion()){
+            if(piezaActual.recorrerTablero()){
                 Thread.sleep(5000);
             }else{
                 JOptionPane.showMessageDialog(null, "No hay solución");
             }
-//            piezaActual.recorrerTableroEnTiempoReal();
-            
             tablero.limpiar();
+            recorriendoTablero = false;
         } catch (Exception ex) {
             System.err.println("Error inesperado: " + ex.getMessage());
         }
@@ -189,5 +188,4 @@ public class Ajedrez extends JFrame implements Runnable {
     public static int getDimensiones() {
         return DIMENSIONES;
     }
-
 }

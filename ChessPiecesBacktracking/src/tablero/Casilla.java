@@ -1,7 +1,6 @@
-package elementosBidimensionales;
+package tablero;
 
 import java.awt.Color;
-
 import javax.swing.JLabel;
 
 /**

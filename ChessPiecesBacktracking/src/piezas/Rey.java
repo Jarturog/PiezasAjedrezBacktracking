@@ -1,7 +1,7 @@
 package piezas;
 
-import elementosBidimensionales.Tablero;
-import elementosBidimensionales.Vector2D;
+import tablero.Tablero;
+import tablero.Vector2D;
 
 /**
  *

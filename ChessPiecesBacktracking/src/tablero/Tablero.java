@@ -1,9 +1,7 @@
-package elementosBidimensionales;
+package tablero;
 
-import java.util.LinkedList;
 import java.awt.Color;
 import javax.swing.JPanel;
-import piezas.Pieza;
 
 /**
  *
@@ -11,13 +9,12 @@ import piezas.Pieza;
  */
 public class Tablero extends JPanel {
 
-    private final int DIMENSION;
-    private static final int MAXIMO = 800;
+    private final int DIMENSIONES;
     private int casillasVisitadas;
     private final Casilla[] casillas;
 
     public Tablero(int dimensiones) {
-        DIMENSION = dimensiones;
+        DIMENSIONES = dimensiones;
         casillas = new Casilla[dimensiones * dimensiones];
         boolean blanco = true;
         for (int i = 0; i < dimensiones; i++) {
@@ -30,14 +27,14 @@ public class Tablero extends JPanel {
                 add(casillas[getIndexCasilla(new Vector2D(i, j))]);
                 blanco = !blanco;
             }
-            if (DIMENSION % 2 == 0) {
+            if (DIMENSIONES % 2 == 0) {
                 blanco = !blanco;
             }
         }
     }
 
     private int getIndexCasilla(Vector2D v) {
-        return v.getX() + v.getY() * DIMENSION;
+        return v.getX() + v.getY() * DIMENSIONES;
     }
 
     public Casilla getCasilla(Vector2D posicion) {
@@ -63,8 +60,8 @@ public class Tablero extends JPanel {
     }
 
     public boolean isPosicionDelTablero(Vector2D futuraPosicion) {
-        return !(futuraPosicion.getX() > DIMENSION - 1
-                || futuraPosicion.getY() > DIMENSION - 1
+        return !(futuraPosicion.getX() > DIMENSIONES - 1
+                || futuraPosicion.getY() > DIMENSIONES - 1
                 || futuraPosicion.getX() < 0 || futuraPosicion.getY() < 0);
     }
 
@@ -75,12 +72,12 @@ public class Tablero extends JPanel {
         return !casillas[getIndexCasilla(pos)].estaOcupada();
     }
 
-    public int getDIMENSION() {
-        return DIMENSION;
+    public int getDIMENSIONES() {
+        return DIMENSIONES;
     }
 
     public int getNumCasillas() {
-        return DIMENSION * DIMENSION;
+        return DIMENSIONES * DIMENSIONES;
     }
 
     public int getCasillasVisitadas() {
@@ -91,6 +88,7 @@ public class Tablero extends JPanel {
         for (int i = 0; i < casillas.length; i++) {
             casillas[i].setIcon(null);
             casillas[i].setOcupada(false);
+            casillasVisitadas = 0;
         }
     }
 }

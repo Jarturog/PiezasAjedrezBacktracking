@@ -1,4 +1,4 @@
-package elementosBidimensionales;
+package tablero;
 
 /**
  *

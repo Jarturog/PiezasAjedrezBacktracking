@@ -1,7 +1,7 @@
 package piezas;
 
-import elementosBidimensionales.Tablero;
-import elementosBidimensionales.Vector2D;
+import tablero.Tablero;
+import tablero.Vector2D;
 
 /**
  *
@@ -23,6 +23,6 @@ public class Peon extends Pieza {
 
     @Override
     public String imagenPieza() {
-        return "pieza.png";
+        return "peon.png";
     }
 }
