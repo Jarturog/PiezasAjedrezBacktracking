@@ -27,14 +27,13 @@ import piezas.*;
  */
 public class Ajedrez extends JFrame implements Runnable {
 
-    private Ajedrez esto = this;
-    private Container panelContenidos;
-    private Tablero tablero;
+    private final Ajedrez esto = this;
+    private final Container panelContenidos;
+    private final Tablero tablero;
     private final int DIMENSIONES = 8;
     private final static int PIXELES = 640;
     private final int NUM_PIEZAS = 7;
     private final JButton[] botonesPiezas = new JButton[NUM_PIEZAS];
-    private final Pieza[] piezas = new Pieza[NUM_PIEZAS];
     private Pieza piezaActual;
 
     private final Vector2D posicionInicial = new Vector2D(DIMENSIONES / 2, DIMENSIONES / 2);
@@ -46,9 +45,6 @@ public class Ajedrez extends JFrame implements Runnable {
             System.out.println("No se ha podido establecer el formato de su plataforma" + e);
         }
         Ajedrez aj = new Ajedrez();
-//        Caballo c = new Caballo(new Vector2D(4, 4));
-//        c.recorrerTablero(aj.tablero);
-//        aj.recorrerTableroMovimientosCorrectos();
     }
 
     public Ajedrez() {
@@ -71,21 +67,13 @@ public class Ajedrez extends JFrame implements Runnable {
 
     }
 
-    private void inicializarTablero(Pieza p) {
-        ((CardLayout)panelContenidos.getLayout()).last(panelContenidos);
-        try {
-            p.recorrerTablero(tablero);
-        } catch (Exception ex) {
-            System.err.println("Error malo" + ex.getMessage());
-        }
-    }
-
     private void inicializarBotonesYPiezas() {
 
         JPanel panelBotones = new JPanel();
         panelBotones.setBackground(Color.black);
         panelBotones.setLayout(new GridLayout(1, 6));
         
+        Pieza[] piezas = new Pieza[NUM_PIEZAS];
         piezas[0] = new Peon(posicionInicial);
         piezas[1] = new Torre(posicionInicial);
         piezas[2] = new Caballo(posicionInicial);
@@ -131,17 +119,19 @@ public class Ajedrez extends JFrame implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 piezaActual = piezas[i];
-                System.out.println("bbb");
+                ((CardLayout)panelContenidos.getLayout()).last(panelContenidos);
                 new Thread(esto).start();
-                System.out.println("ccc");
             }
         });
     }
 
+    /**
+     * Recorre el tablero con la pieza decidida en el actionPerformed.
+     * Diseñado para que lo ejecute un hilo secundario.
+     */
     @Override
     public void run() {
         try {
-            ((CardLayout)panelContenidos.getLayout()).last(panelContenidos);
             piezaActual.recorrerTablero(tablero);
         } catch (Exception ex) {
             System.err.println("Error malo" + ex.getMessage());
