@@ -110,6 +110,7 @@ public abstract class Pieza {
      * @throws Exception
      */
     private void rRecorrerTablero(Tablero t, LinkedList<Vector2D> solucion, Vector2D mov) throws Exception {
+        System.out.println(t.getCasillasVisitadas());
         moverGrafico(t, mov); // mueve la pieza a la nueva posición
         Thread.sleep(1000);
         solucion.push(new Vector2D(posicion)); // guarda la posición actual en la solución

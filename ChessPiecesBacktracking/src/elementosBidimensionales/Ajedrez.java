@@ -10,6 +10,7 @@ import java.awt.Image;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -24,14 +25,18 @@ import piezas.*;
  *
  * @author Arturo y Marta
  */
-public class Ajedrez extends JFrame {
+public class Ajedrez extends JFrame implements Runnable {
 
+    private Ajedrez esto = this;
     private Container panelContenidos;
     private Tablero tablero;
     private final int DIMENSIONES = 8;
     private final static int PIXELES = 640;
     private final int NUM_PIEZAS = 7;
     private final JButton[] botonesPiezas = new JButton[NUM_PIEZAS];
+    private final Pieza[] piezas = new Pieza[NUM_PIEZAS];
+    private Pieza piezaActual;
+
     private final Vector2D posicionInicial = new Vector2D(DIMENSIONES / 2, DIMENSIONES / 2);
 
     public static void main(String[] args) throws Exception {
@@ -52,7 +57,7 @@ public class Ajedrez extends JFrame {
         setPreferredSize(new Dimension(PIXELES, PIXELES));
         panelContenidos.setLayout(new CardLayout());
 
-        inicializarBotones();
+        inicializarBotonesYPiezas();
 
         tablero = new Tablero(DIMENSIONES);
         tablero.setLayout(new GridLayout(DIMENSIONES, DIMENSIONES));
@@ -66,7 +71,7 @@ public class Ajedrez extends JFrame {
 
     }
 
-    private void recorrerTablero(Pieza p) {
+    private void inicializarTablero(Pieza p) {
         ((CardLayout)panelContenidos.getLayout()).last(panelContenidos);
         try {
             p.recorrerTablero(tablero);
@@ -75,11 +80,12 @@ public class Ajedrez extends JFrame {
         }
     }
 
-    private void inicializarBotones() {
+    private void inicializarBotonesYPiezas() {
 
         JPanel panelBotones = new JPanel();
+        panelBotones.setBackground(Color.black);
+        panelBotones.setLayout(new GridLayout(1, 6));
         
-        Pieza[] piezas = new Pieza[NUM_PIEZAS];
         piezas[0] = new Peon(posicionInicial);
         piezas[1] = new Torre(posicionInicial);
         piezas[2] = new Caballo(posicionInicial);
@@ -98,6 +104,8 @@ public class Ajedrez extends JFrame {
 
         for (int i = 0; i < NUM_PIEZAS; i++) {
             vincularAccion(i, piezas);
+            botonesPiezas[i].setBackground(Color.black);
+            botonesPiezas[i].setForeground(Color.white);
             panelBotones.add(botonesPiezas[i]);
         }
         panelContenidos.add(panelBotones);
@@ -122,8 +130,21 @@ public class Ajedrez extends JFrame {
         botonesPiezas[i].addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                recorrerTablero(piezas[i]);
+                piezaActual = piezas[i];
+                System.out.println("bbb");
+                new Thread(esto).start();
+                System.out.println("ccc");
             }
         });
+    }
+
+    @Override
+    public void run() {
+        try {
+            ((CardLayout)panelContenidos.getLayout()).last(panelContenidos);
+            piezaActual.recorrerTablero(tablero);
+        } catch (Exception ex) {
+            System.err.println("Error malo" + ex.getMessage());
+        }
     }
 }
