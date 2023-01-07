@@ -27,7 +27,7 @@ public class Ajedrez extends JFrame implements Runnable {
     private final static int DIMENSIONES = 8;
     private final static int PIXELES = 640;
     
-    private final int NUM_PIEZAS = 7;
+    private final int NUM_PIEZAS = 6; // aumentar cuando se añadan piezas
     private boolean recorriendoTablero;
     private Pieza piezaActual;
     private final Ajedrez instancia;
@@ -69,7 +69,7 @@ public class Ajedrez extends JFrame implements Runnable {
         botonesPiezas[3] = new JButton("Alfil");
         botonesPiezas[4] = new JButton("Reina");
         botonesPiezas[5] = new JButton("Rey");
-        botonesPiezas[6] = new JButton("Especial");
+        // botonesPiezas[6] = new JButton("---"); para añadir una nueva pieza
 
         Pieza[] piezas = new Pieza[NUM_PIEZAS];
         piezas[0] = new Peon(tablero);
@@ -78,8 +78,8 @@ public class Ajedrez extends JFrame implements Runnable {
         piezas[3] = new Alfil(tablero);
         piezas[4] = new Reina(tablero);
         piezas[5] = new Rey(tablero);
-        piezas[6] = new Campeon(tablero);
-
+        // piezas[6] = new ---(tablero); para añadir una nueva pieza
+        
         for (int i = 0; i < NUM_PIEZAS; i++) {
             vincularAccion(i, piezas);
             botonesPiezas[i].setBackground(Color.black);
