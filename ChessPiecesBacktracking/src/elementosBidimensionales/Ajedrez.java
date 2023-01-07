@@ -106,7 +106,7 @@ public class Ajedrez extends JFrame implements Runnable {
 
             panelBotones.add(botonesPiezas[i]);
         }
-        panelStandBy.add(panelBotones);
+        panelStandBy.add(panelBotones, BorderLayout.NORTH);
     }
 
     /**
