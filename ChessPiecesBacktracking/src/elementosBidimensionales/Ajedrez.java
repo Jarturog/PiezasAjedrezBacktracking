@@ -36,6 +36,8 @@ public class Ajedrez extends JFrame implements Runnable {
     private final JButton[] botonesPiezas = new JButton[NUM_PIEZAS];
     private final Pieza[] piezas = new Pieza[NUM_PIEZAS];
     private Pieza piezaActual;
+    private final ImageIcon imagenAjedrez = new ImageIcon("Ajedrez.png");
+    private JPanel panelInterfaces, panelStandBy, panelBotones;
 
     private final Vector2D posicionInicial = new Vector2D(DIMENSIONES / 2, DIMENSIONES / 2);
 
@@ -54,17 +56,29 @@ public class Ajedrez extends JFrame implements Runnable {
     public Ajedrez() {
         setTitle("Ajedrez");
         panelContenidos = getContentPane();
-        setPreferredSize(new Dimension(PIXELES, PIXELES));
+
         panelContenidos.setLayout(new CardLayout());
-
-        inicializarBotonesYPiezas();
-
-        tablero = new Tablero(DIMENSIONES);
-        tablero.setLayout(new GridLayout(DIMENSIONES, DIMENSIONES));
-//        tablero.setOpaque(true);
-        panelContenidos.add(tablero);
         
-//        ventana.setLocationRelativeTo(null);
+        
+        panelInterfaces = new JPanel();
+        panelInterfaces.setLayout(new CardLayout());
+        panelContenidos.add(panelInterfaces, BorderLayout.CENTER);
+        panelStandBy = new JPanel();
+        panelStandBy.setLayout(new BorderLayout());
+        ImageIcon nuevaImagen = redimensionarImagen(imagenAjedrez);
+        JLabel etiquetaImagen = new JLabel(nuevaImagen);
+
+        panelStandBy.add(etiquetaImagen, BorderLayout.CENTER);
+        panelInterfaces.add(panelStandBy);
+        inicializarBotonesYPiezas();
+        panelStandBy.setVisible(true);
+        
+        tablero = new Tablero(DIMENSIONES);
+//        tablero.setLayout(new GridLayout(DIMENSIONES, DIMENSIONES));
+//        tablero.setVisible(false);
+        panelInterfaces.add(tablero);
+
+        setLocationRelativeTo(null);
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
@@ -72,8 +86,11 @@ public class Ajedrez extends JFrame implements Runnable {
     }
 
     private void inicializarTablero(Pieza p) {
-        ((CardLayout)panelContenidos.getLayout()).last(panelContenidos);
+        ((CardLayout) panelContenidos.getLayout()).last(panelContenidos);
         try {
+            panelStandBy.setVisible(false);
+             tablero.setLayout(new GridLayout(DIMENSIONES, DIMENSIONES));
+            tablero.setVisible(true);
             p.recorrerTablero(tablero);
         } catch (Exception ex) {
             System.err.println("Error malo" + ex.getMessage());
@@ -82,10 +99,11 @@ public class Ajedrez extends JFrame implements Runnable {
 
     private void inicializarBotonesYPiezas() {
 
-        JPanel panelBotones = new JPanel();
+        panelBotones = new JPanel();
         panelBotones.setBackground(Color.black);
         panelBotones.setLayout(new GridLayout(1, 6));
-        
+
+        Pieza[] piezas = new Pieza[NUM_PIEZAS];
         piezas[0] = new Peon(posicionInicial);
         piezas[1] = new Torre(posicionInicial);
         piezas[2] = new Caballo(posicionInicial);
@@ -106,9 +124,10 @@ public class Ajedrez extends JFrame implements Runnable {
             vincularAccion(i, piezas);
             botonesPiezas[i].setBackground(Color.black);
             botonesPiezas[i].setForeground(Color.white);
+
             panelBotones.add(botonesPiezas[i]);
         }
-        panelContenidos.add(panelBotones);
+        panelContenidos.add(panelBotones, java.awt.BorderLayout.PAGE_START);;
     }
 
     /**
@@ -141,10 +160,18 @@ public class Ajedrez extends JFrame implements Runnable {
     @Override
     public void run() {
         try {
-            ((CardLayout)panelContenidos.getLayout()).last(panelContenidos);
+            ((CardLayout) panelContenidos.getLayout()).last(panelContenidos);
             piezaActual.recorrerTablero(tablero);
         } catch (Exception ex) {
             System.err.println("Error malo" + ex.getMessage());
         }
+    }
+
+    private ImageIcon redimensionarImagen(ImageIcon imagen) {
+
+        Image image = imagen.getImage(); // transforma ImageIcon a image
+        Image newimg = image.getScaledInstance(920, 920, java.awt.Image.SCALE_DEFAULT);
+        imagen = new ImageIcon(newimg);  // transforma  Image a imageIcon
+        return imagen;
     }
 }
