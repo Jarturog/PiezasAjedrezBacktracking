@@ -1,4 +1,4 @@
-package piezas;
+    package piezas;
 
 import tablero.Tablero;
 import tablero.Vector2D;

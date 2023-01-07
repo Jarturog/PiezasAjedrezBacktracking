@@ -7,23 +7,40 @@ import java.util.LinkedList;
 import javax.swing.ImageIcon;
 
 /**
+ * Clase abstracta que representa una pieza.
  *
  * @author Arturo y Marta
  */
 public abstract class Pieza {
 
+    /**
+     * String del nombre de la imagen que indica si una casilla ha sido
+     * visitada.
+     */
     private final static String IMAGEN_CASILLA_VISITADA = "casillaVisitada.png";
+    /**
+     * El tamaño en píxeles de tanto la altura como de la anchura de las piezas.
+     */
     private final int TAMANYO_PIEZA;
+    /**
+     * El tablero en el que interacciona la pieza.
+     */
     private final Tablero tablero;
+    /**
+     * La posición actual de la pieza, se inicializa con setPosicion().
+     */
     private Vector2D posicion;
-    
+
     /**
      * Equivalente a getMovimientos.
      *
      * @return array de Vector2D que representa los movimientos que puede
-     * realizar la pieza
+     * realizar la pieza.
      */
     public abstract Vector2D[] movimientos();
+    /**
+     * Conjunto de posibles movimientos que puede realizar la pieza.
+     */
     private final Vector2D[] movimientos;
 
     /**
@@ -32,19 +49,51 @@ public abstract class Pieza {
      * @return String que representa el nombre del archivo imagen de la pieza.
      */
     public abstract String imagenPieza();
-    private final String imagenPieza;
-    
-    public Vector2D[] getMovimientos() {
-        return movimientos;
-    }
 
-    public Pieza(Tablero t) {
-        tablero = t;
+    /**
+     * Constructor que inicializa una pieza indicando el tablero que reside, los
+     * píxeles que ocupa e inicializando el conjunto de movimientos y su
+     * respectiva imagen.
+     *
+     * @param tablero el tablero en el que va a moverse.
+     */
+    public Pieza(Tablero tablero) {
+        this.tablero = tablero;
         TAMANYO_PIEZA = Ajedrez.getPixeles() / tablero.getDIMENSIONES();
-        movimientos = movimientos();
-        imagenPieza = imagenPieza();
+        movimientos = movimientos(); // se asigna a una variable para no tener
+        // que crear nuevos vectores y reservar memoria cada vez que se quiera
+        // saver los movimientos
     }
 
+    /**
+     * Asigna la posición por la que empezará a recorrer el tablero, no ocupa
+     * ninguna casilla del tablero todavía.
+     *
+     * @param pos Vector2D representando la fila y columna en la que empezará la
+     * pieza.
+     */
+    public void setPosicion(Vector2D pos) {
+        posicion = new Vector2D(pos);
+    }
+
+    /**
+     * Getter del tablero.
+     *
+     * @return el tablero en el que reside la pieza.
+     */
+    public Tablero getTablero() {
+        return tablero;
+    }
+
+    /**
+     * Dibuja la imagen pasada por parámetro en la que casilla que ocupa la
+     * pieza en el momento. Los casos en los que se usa es para pasar la propia
+     * imagen de la pieza, la imagen que representa que una casilla ha sido
+     * ocupada y null para quitar el dibujo que ya estuviera en la casilla.
+     *
+     * @param nombreImagen
+     * @throws Exception
+     */
     private void dibujar(String nombreImagen) throws Exception {
         ImageIcon iconoImagen = new ImageIcon(new ImageIcon(nombreImagen).getImage().getScaledInstance(TAMANYO_PIEZA, TAMANYO_PIEZA, java.awt.Image.SCALE_DEFAULT));
         tablero.getCasilla(posicion).setIcon(iconoImagen);
@@ -57,7 +106,7 @@ public abstract class Pieza {
         posicion = Vector2D.sumar(posicion, movimiento);
         tablero.ocuparPosicion(posicion, true);
         if (dibujarPieza) {
-            dibujar(imagenPieza);
+            dibujar(imagenPieza());
         }
     }
 
@@ -68,12 +117,8 @@ public abstract class Pieza {
         tablero.ocuparPosicion(posicion, false);
         posicion = Vector2D.sumar(posicion, Vector2D.multiplicar(movimientoRealizado, -1));
         if (dibujarPieza) {
-            dibujar(imagenPieza);
+            dibujar(imagenPieza());
         }
-    }
-
-    public boolean recorrerTablero() throws Exception {
-        return rRecorrerTablero(new LinkedList<Vector2D>(), new Vector2D(0, 0));
     }
 
     public void visualizarMovimientos(LinkedList<Vector2D> movimientos) throws Exception {
@@ -82,9 +127,13 @@ public abstract class Pieza {
             dibujar(IMAGEN_CASILLA_VISITADA);
             Thread.sleep(100);
             posicion = movimientos.pollLast();
-            dibujar(imagenPieza);
+            dibujar(imagenPieza());
             Thread.sleep(100);
         }
+    }
+
+    public boolean recorrerTablero() throws Exception {
+        return rRecorrerTablero(new LinkedList<Vector2D>(), new Vector2D(0, 0));
     }
 
     private boolean rRecorrerTablero(LinkedList<Vector2D> solucion, Vector2D mov) throws Exception {
@@ -117,11 +166,4 @@ public abstract class Pieza {
         return false;
     }
 
-    public void setPosicion(Vector2D pos) {
-        posicion = new Vector2D(pos);
-    }
-
-    public Tablero getTablero() {
-        return tablero;
-    }
 }
