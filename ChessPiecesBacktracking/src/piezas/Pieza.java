@@ -43,7 +43,7 @@ public abstract class Pieza {
     }
 
     private void dibujar(Tablero tablero, String nombreImagen) throws Exception {
-        ImageIcon iconoImagen = new ImageIcon(new ImageIcon(nombreImagen).getImage().getScaledInstance(115, 115, java.awt.Image.SCALE_DEFAULT));
+        ImageIcon iconoImagen = new ImageIcon(new ImageIcon(nombreImagen).getImage().getScaledInstance(80, 80, java.awt.Image.SCALE_DEFAULT));
         Casilla c = tablero.getCasilla(posicion);
         c.setImagen(iconoImagen);
 //         ImageIcon iconoImagen = new ImageIcon(nombreImagen);
