@@ -9,6 +9,7 @@ import java.awt.Graphics;
 import java.awt.Dimension;
 import java.awt.Color;
 import javax.swing.JPanel;
+import piezas.Pieza;
 
 /**
  *
@@ -48,7 +49,7 @@ public class Tablero extends JPanel {
     }
 
     public void ocuparPosicion(Vector2D pos) throws Exception {
-        if (!casillaLibre(pos)) {
+        if (!isCasillaLibre(pos)) {
             throw new Exception("Error ocupando una casilla que no está libre");
         }
         casillas[getIndexCasilla(pos)].setOcupada(true);
@@ -56,21 +57,21 @@ public class Tablero extends JPanel {
     }
 
     public void desOcuparPosicion(Vector2D pos) throws Exception {
-        if (casillaLibre(pos)) {
+        if (isCasillaLibre(pos)) {
             throw new Exception("Error desocupando una casilla ya libre");
         }
         casillas[getIndexCasilla(pos)].setOcupada(false);
         casillasVisitadas--;
     }
 
-    public boolean movimientoLegal(Vector2D futuraPosicion) {
+    public boolean isPosicionDelTablero(Vector2D futuraPosicion) {
         return !(futuraPosicion.getX() > DIMENSION - 1
                 || futuraPosicion.getY() > DIMENSION - 1
                 || futuraPosicion.getX() < 0 || futuraPosicion.getY() < 0);
     }
 
-    public boolean casillaLibre(Vector2D pos) throws Exception {
-        if (!movimientoLegal(pos)) {
+    public boolean isCasillaLibre(Vector2D pos) throws Exception {
+        if (!isPosicionDelTablero(pos)) {
             throw new Exception("Error comprobando si una casilla inexistente está libre");
         }
         return !casillas[getIndexCasilla(pos)].estaOcupada();
@@ -86,5 +87,12 @@ public class Tablero extends JPanel {
 
     public int getCasillasVisitadas() {
         return casillasVisitadas;
+    }
+    
+    public void visualizarMovimientos(LinkedList<Vector2D> movimientos, Pieza p){
+        for (int i = 0; i < casillas.length; i++) {
+            
+            
+        }
     }
 }
