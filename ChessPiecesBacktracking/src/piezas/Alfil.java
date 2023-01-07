@@ -1,5 +1,6 @@
 package piezas;
 
+import elementosBidimensionales.Tablero;
 import elementosBidimensionales.Vector2D;
 import javax.swing.ImageIcon;
 
@@ -8,6 +9,10 @@ import javax.swing.ImageIcon;
  * @author Arturo y Marta
  */
 public class Alfil extends Pieza {
+
+    public Alfil(Tablero t) {
+        super(t);
+    }
 
     @Override
     public Vector2D[] movimientos() {

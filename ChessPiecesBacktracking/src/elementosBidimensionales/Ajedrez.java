@@ -1,25 +1,22 @@
 package elementosBidimensionales;
 
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import piezas.Caballo;
+import static javax.swing.UIManager.getCrossPlatformLookAndFeelClassName;
+import static javax.swing.UIManager.setLookAndFeel;
 import piezas.*;
 
 /**
@@ -31,18 +28,18 @@ public class Ajedrez extends JFrame implements Runnable {
     private final Ajedrez esto = this;
     private final Container panelContenidos;
     private final Tablero tablero;
-    private final static int DIMENSIONES = 8;
+    private final static int DIMENSIONES = 3;
     private final static int PIXELES = 640;
     private final int NUM_PIEZAS = 7;
     private final JButton[] botonesPiezas = new JButton[NUM_PIEZAS];
     private Pieza piezaActual;
-//    private final ImageIcon imagenAjedrez = new ImageIcon("Ajedrez.png");  NO E NECESARIO
     private final JPanel panelBotones;
-    private JOptionPane opcion;
+    private static boolean recorriendoTablero;
+//    private final Thread hilo;
 
     public static void main(String[] args) throws Exception {
         try {
-            javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getCrossPlatformLookAndFeelClassName());
+            setLookAndFeel(getCrossPlatformLookAndFeelClassName());
         } catch (Exception e) {
             System.out.println("No se ha podido establecer el formato de su plataforma" + e);
         }
@@ -50,6 +47,8 @@ public class Ajedrez extends JFrame implements Runnable {
     }
 
     public Ajedrez() {
+        recorriendoTablero = false;
+//        hilo = new Thread(this);
         setTitle("Ajedrez");
         panelContenidos = getContentPane();
         panelContenidos.setLayout(new BorderLayout());
@@ -61,16 +60,8 @@ public class Ajedrez extends JFrame implements Runnable {
         panelBotones = new JPanel();
         panelBotones.setBackground(Color.black);
         panelBotones.setBackground(Color.black);
-        panelBotones.setLayout(new GridLayout(1, 6));
-
-        Pieza[] piezas = new Pieza[NUM_PIEZAS];
-        piezas[0] = new Peon();
-        piezas[1] = new Torre();
-        piezas[2] = new Caballo();
-        piezas[3] = new Alfil();
-        piezas[4] = new Reina();
-        piezas[5] = new Rey();
-        piezas[6] = new Peon(); 
+        panelBotones.setLayout(new GridLayout(1, NUM_PIEZAS));
+        panelContenidos.add(panelBotones, BorderLayout.NORTH);
 
         botonesPiezas[0] = new JButton("Peón");
         botonesPiezas[1] = new JButton("Torre");
@@ -80,18 +71,25 @@ public class Ajedrez extends JFrame implements Runnable {
         botonesPiezas[5] = new JButton("Rey");
         botonesPiezas[6] = new JButton("Especial");
 
+        Pieza[] piezas = new Pieza[NUM_PIEZAS];
+        piezas[0] = new Peon(tablero);
+        piezas[1] = new Torre(tablero);
+        piezas[2] = new Caballo(tablero);
+        piezas[3] = new Alfil(tablero);
+        piezas[4] = new Reina(tablero);
+        piezas[5] = new Rey(tablero);
+        piezas[6] = new Campeon(tablero);
+
         for (int i = 0; i < NUM_PIEZAS; i++) {
             vincularAccion(i, piezas);
             botonesPiezas[i].setBackground(Color.black);
             botonesPiezas[i].setForeground(Color.white);
-
             panelBotones.add(botonesPiezas[i]);
         }
-        panelContenidos.add(panelBotones, BorderLayout.NORTH);
 
         setPreferredSize(new Dimension(PIXELES, PIXELES));
-//        setLocationRelativeTo(null);
         pack();
+        setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
@@ -115,14 +113,55 @@ public class Ajedrez extends JFrame implements Runnable {
         botonesPiezas[i].addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                opcion = new JOptionPane();
-
-                ImageIcon imagenPieza = new ImageIcon(piezas[i].imagenPieza());
-                String n = (String) opcion.showInputDialog(null, "Posicion inicial: ", null, JOptionPane.INFORMATION_MESSAGE, imagenPieza, null, "");
-
-//              posicionInicial = (AQUI HAY Q CONVERTIR LA ENTRADA A VECTOR 2D);
+//                if(recorriendoTablero){
+//                    JOptionPane.showMessageDialog(null, "No se puede", "No se puede", HEIGHT);
+//                    return;
+//                }
+                boolean entradaErronea = true;
+                ImageIcon imagen = new ImageIcon(piezas[i].imagenPieza());
+                String fila = (String) JOptionPane.showInputDialog(null, "Fila donde comienza (1 - " + DIMENSIONES + "):", null, JOptionPane.INFORMATION_MESSAGE, imagen, null, "");
+                int coordX = 0;
+                while (entradaErronea) {
+                    if (fila == null) {
+                        return;
+                    }
+                    try {
+                        coordX = Integer.parseInt(fila);
+                        if (coordX < 1 || coordX > DIMENSIONES) {
+                            throw new NumberFormatException();
+                        }
+                        coordX--;
+                        entradaErronea = false;
+                    } catch (NumberFormatException ex) {
+                        fila = (String) JOptionPane.showInputDialog(null, "Por favor, escribe un número entre 1 y " + DIMENSIONES + "):", null, JOptionPane.INFORMATION_MESSAGE, imagen, null, "");
+                    }
+                }
+                entradaErronea = true;
+                String columna = (String) JOptionPane.showInputDialog(null, "Columna donde comienza (1 - " + DIMENSIONES + "):", null, JOptionPane.INFORMATION_MESSAGE, imagen, null, "");
+                int coordY = 0;
+                while (entradaErronea) {
+                    if (columna == null) {
+                        return;
+                    }
+                    try {
+                        coordY = Integer.parseInt(columna);
+                        if (coordY < 1 || coordY > DIMENSIONES) {
+                            throw new NumberFormatException();
+                        }
+                        coordY--;
+                        entradaErronea = false;
+                    } catch (NumberFormatException ex) {
+                        columna = (String) JOptionPane.showInputDialog(null, "Por favor, escribe un número entre 1 y " + DIMENSIONES + "):", null, JOptionPane.INFORMATION_MESSAGE, imagen, null, "");
+                    }
+                }
                 piezaActual = piezas[i];
-                new Thread(esto).start();
+                piezaActual.setPosicion(new Vector2D(coordX, coordY));
+                recorriendoTablero = true;
+                try {
+                    new Thread(esto).start();
+                } catch (Exception ex) {
+                    Logger.getLogger(Ajedrez.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -130,17 +169,24 @@ public class Ajedrez extends JFrame implements Runnable {
     @Override
     public void run() {
         try {
-            piezaActual.recorrerTableroEnTiempoReal(tablero);
+            if(piezaActual.recorrerTableroSolucion()){
+                Thread.sleep(5000);
+            }else{
+                JOptionPane.showMessageDialog(null, "No hay solución");
+            }
+//            piezaActual.recorrerTableroEnTiempoReal();
+            
+            tablero.limpiar();
         } catch (Exception ex) {
-            System.err.println("Error malo" + ex.getMessage());
+            System.err.println("Error inesperado: " + ex.getMessage());
         }
     }
-    
-    public static int getPixeles(){
+
+    public static int getPixeles() {
         return PIXELES;
     }
-    
-    public static int getDimensiones(){
+
+    public static int getDimensiones() {
         return DIMENSIONES;
     }
 

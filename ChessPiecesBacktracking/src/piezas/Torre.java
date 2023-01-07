@@ -1,5 +1,6 @@
 package piezas;
 
+import elementosBidimensionales.Tablero;
 import elementosBidimensionales.Vector2D;
 
 /**
@@ -7,6 +8,10 @@ import elementosBidimensionales.Vector2D;
  * @author Arturo y Marta
  */
 public class Torre extends Pieza {
+
+    public Torre(Tablero t) {
+        super(t);
+    }
     
     @Override
     public Vector2D[] movimientos() {

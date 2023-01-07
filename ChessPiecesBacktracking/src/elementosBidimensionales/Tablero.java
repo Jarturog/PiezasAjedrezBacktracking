@@ -11,12 +11,13 @@ import piezas.Pieza;
  */
 public class Tablero extends JPanel {
 
-    private final int DIMENSION = 8;
+    private final int DIMENSION;
     private static final int MAXIMO = 800;
     private int casillasVisitadas;
     private final Casilla[] casillas;
 
     public Tablero(int dimensiones) {
+        DIMENSION = dimensiones;
         casillas = new Casilla[dimensiones * dimensiones];
         boolean blanco = true;
         for (int i = 0; i < dimensiones; i++) {
@@ -29,26 +30,34 @@ public class Tablero extends JPanel {
                 add(casillas[getIndexCasilla(new Vector2D(i, j))]);
                 blanco = !blanco;
             }
-            blanco = !blanco;
+            if (DIMENSION % 2 == 0) {
+                blanco = !blanco;
+            }
         }
     }
 
     private int getIndexCasilla(Vector2D v) {
         return v.getX() + v.getY() * DIMENSION;
     }
-    
-    public Casilla getCasilla(Vector2D posicion){
+
+    public Casilla getCasilla(Vector2D posicion) {
         return casillas[getIndexCasilla(posicion)];
     }
 
     public void ocuparPosicion(Vector2D pos, boolean ocupar) throws Exception {
         if (!isCasillaLibre(pos) == ocupar) {
-            throw new Exception("Error ocupando/desocupando una casilla");
+            String s;
+            if(ocupar){
+                s = "Error ocupando una casilla que ya estaba ocupada";
+            }else{
+                s = "Error desocupando una casilla que ya estaba libre";
+            }
+            throw new Exception(s);
         }
         casillas[getIndexCasilla(pos)].setOcupada(ocupar);
-        if(ocupar){
+        if (ocupar) {
             casillasVisitadas++;
-        }else{
+        } else {
             casillasVisitadas--;
         }
     }
@@ -77,11 +86,11 @@ public class Tablero extends JPanel {
     public int getCasillasVisitadas() {
         return casillasVisitadas;
     }
-    
-    public void visualizarMovimientos(LinkedList<Vector2D> movimientos, Pieza p){
+
+    public void limpiar(){
         for (int i = 0; i < casillas.length; i++) {
-            
-            
+            casillas[i].setIcon(null);
+            casillas[i].setOcupada(false);
         }
     }
 }
