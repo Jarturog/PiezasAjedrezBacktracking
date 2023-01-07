@@ -80,10 +80,10 @@ public abstract class Pieza {
         posicion = movimientos.pollLast();
         while (!movimientos.isEmpty()) {
             dibujar(IMAGEN_CASILLA_VISITADA);
-            Thread.sleep(500);
+            Thread.sleep(100);
             posicion = movimientos.pollLast();
             dibujar(imagenPieza);
-            Thread.sleep(500);
+            Thread.sleep(100);
         }
     }
 

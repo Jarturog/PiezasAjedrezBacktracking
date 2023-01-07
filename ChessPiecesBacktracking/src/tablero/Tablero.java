@@ -19,12 +19,13 @@ public class Tablero extends JPanel {
         boolean blanco = true;
         for (int i = 0; i < dimensiones; i++) {
             for (int j = 0; j < dimensiones; j++) {
+                Vector2D v = new Vector2D(j, i);
                 if (blanco) {
-                    casillas[getIndexCasilla(new Vector2D(i, j))] = new Casilla(Color.WHITE);
+                    casillas[getIndexCasilla(v)] = new Casilla(Color.WHITE);
                 } else {
-                    casillas[getIndexCasilla(new Vector2D(i, j))] = new Casilla(Color.BLACK);
+                    casillas[getIndexCasilla(v)] = new Casilla(Color.BLACK);
                 }
-                add(casillas[getIndexCasilla(new Vector2D(i, j))]);
+                add(casillas[getIndexCasilla(v)]);
                 blanco = !blanco;
             }
             if (DIMENSIONES % 2 == 0) {
