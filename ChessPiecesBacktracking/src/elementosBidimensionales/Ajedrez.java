@@ -56,27 +56,65 @@ public class Ajedrez extends JFrame implements Runnable {
     public Ajedrez() {
         setTitle("Ajedrez");
         panelContenidos = getContentPane();
-
         panelContenidos.setLayout(new CardLayout());
         
-        
-        panelInterfaces = new JPanel();
-        panelInterfaces.setLayout(new CardLayout());
-        panelContenidos.add(panelInterfaces, BorderLayout.CENTER);
+             panelBotones = new JPanel();
+        panelBotones.setBackground(Color.black);
+        panelBotones.setLayout(new GridLayout(1, 6));
+
+        Pieza[] piezas = new Pieza[NUM_PIEZAS];
+        piezas[0] = new Peon(posicionInicial);
+        piezas[1] = new Torre(posicionInicial);
+        piezas[2] = new Caballo(posicionInicial);
+        piezas[3] = new Alfil(posicionInicial);
+        piezas[4] = new Reina(posicionInicial);
+        piezas[5] = new Rey(posicionInicial);
+        piezas[6] = new Peon(posicionInicial); // Especial
+
+        botonesPiezas[0] = new JButton("Peón");
+        botonesPiezas[1] = new JButton("Torre");
+        botonesPiezas[2] = new JButton("Caballo");
+        botonesPiezas[3] = new JButton("Alfil");
+        botonesPiezas[4] = new JButton("Reina");
+        botonesPiezas[5] = new JButton("Rey");
+        botonesPiezas[6] = new JButton("Especial");
+
+        for (int i = 0; i < NUM_PIEZAS; i++) {
+            vincularAccion(i, piezas);
+            botonesPiezas[i].setBackground(Color.black);
+            botonesPiezas[i].setForeground(Color.white);
+
+            panelBotones.add(botonesPiezas[i]);
+        }
+        panelContenidos.add(panelBotones, java.awt.BorderLayout.PAGE_START);
+//        inicializarBotonesYPiezas();
+        ////////////////
+//                panelInterfaces = new JPanel();
+// 
+//        panelInterfaces.setLayout(new CardLayout());
+
+//        panelContenidos.add(panelInterfaces, BorderLayout.CENTER);
+
         panelStandBy = new JPanel();
+       
         panelStandBy.setLayout(new BorderLayout());
+        panelStandBy.setBackground(Color.black);
+
+ 
         ImageIcon nuevaImagen = redimensionarImagen(imagenAjedrez);
         JLabel etiquetaImagen = new JLabel(nuevaImagen);
 
         panelStandBy.add(etiquetaImagen, BorderLayout.CENTER);
-        panelInterfaces.add(panelStandBy);
-        inicializarBotonesYPiezas();
-        panelStandBy.setVisible(true);
+
+        panelContenidos.add(panelStandBy,java.awt.BorderLayout.CENTER);
+
+        
+ 
         
         tablero = new Tablero(DIMENSIONES);
-//        tablero.setLayout(new GridLayout(DIMENSIONES, DIMENSIONES));
+        tablero.setLayout(new GridLayout(DIMENSIONES, DIMENSIONES));
 //        tablero.setVisible(false);
-        panelInterfaces.add(tablero);
+//        panelInterfaces.add(tablero);
 
         setLocationRelativeTo(null);
         pack();
@@ -89,7 +127,7 @@ public class Ajedrez extends JFrame implements Runnable {
         ((CardLayout) panelContenidos.getLayout()).last(panelContenidos);
         try {
             panelStandBy.setVisible(false);
-             tablero.setLayout(new GridLayout(DIMENSIONES, DIMENSIONES));
+//             tablero.setLayout(new GridLayout(DIMENSIONES, DIMENSIONES));
             tablero.setVisible(true);
             p.recorrerTablero(tablero);
         } catch (Exception ex) {
@@ -127,7 +165,7 @@ public class Ajedrez extends JFrame implements Runnable {
 
             panelBotones.add(botonesPiezas[i]);
         }
-        panelContenidos.add(panelBotones, java.awt.BorderLayout.PAGE_START);;
+        panelContenidos.add(panelBotones, java.awt.BorderLayout.PAGE_START);
     }
 
     /**
