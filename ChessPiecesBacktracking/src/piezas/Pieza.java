@@ -34,13 +34,13 @@ public abstract class Pieza {
         imagenPieza = imagenPieza();
     }
 
-    private ImageIcon redimensionarImagen(ImageIcon imagen) {
-
-        Image image = imagen.getImage(); // transforma ImageIcon a image
-        Image newimg = image.getScaledInstance(115, 115, java.awt.Image.SCALE_DEFAULT);
-        imagen = new ImageIcon(newimg);  // transforma  Image a imageIcon
-        return imagen;
-    }
+//    private ImageIcon redimensionarImagen(ImageIcon imagen) {
+//
+//        Image image = imagen.getImage(); // transforma ImageIcon a image
+//        Image newimg = image.getScaledInstance(115, 115, java.awt.Image.SCALE_DEFAULT);
+//        imagen = new ImageIcon(newimg);  // transforma  Image a imageIcon
+//        return imagen;
+//    }
 
     private void dibujar(Tablero tablero, String nombreImagen) throws Exception {
         ImageIcon iconoImagen = new ImageIcon(new ImageIcon(nombreImagen).getImage().getScaledInstance(80, 80, java.awt.Image.SCALE_DEFAULT));

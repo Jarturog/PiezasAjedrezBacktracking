@@ -17,6 +17,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import piezas.Caballo;
 import piezas.*;
@@ -35,8 +36,9 @@ public class Ajedrez extends JFrame implements Runnable {
     private final int NUM_PIEZAS = 7;
     private final JButton[] botonesPiezas = new JButton[NUM_PIEZAS];
     private Pieza piezaActual;
-    private final ImageIcon imagenAjedrez = new ImageIcon("Ajedrez.png");
-    private JPanel panelStandBy, panelBotones;
+//    private final ImageIcon imagenAjedrez = new ImageIcon("Ajedrez.png");  NO E NECESARIO
+    private final JPanel panelBotones;
+    private JOptionPane opcion;
 
     private final Vector2D posicionInicial = new Vector2D(DIMENSIONES / 2, DIMENSIONES / 2);
 
@@ -57,12 +59,12 @@ public class Ajedrez extends JFrame implements Runnable {
         tablero = new Tablero(DIMENSIONES);
         tablero.setLayout(new GridLayout(DIMENSIONES, DIMENSIONES));
         panelContenidos.add(tablero, BorderLayout.CENTER);
-        
+
         panelBotones = new JPanel();
         panelBotones.setBackground(Color.black);
         panelBotones.setBackground(Color.black);
         panelBotones.setLayout(new GridLayout(1, 6));
-        
+
         Pieza[] piezas = new Pieza[NUM_PIEZAS];
         piezas[0] = new Peon(posicionInicial);
         piezas[1] = new Torre(posicionInicial);
@@ -89,7 +91,6 @@ public class Ajedrez extends JFrame implements Runnable {
         }
         panelContenidos.add(panelBotones, BorderLayout.NORTH);
 
-        
         setPreferredSize(new Dimension(PIXELES, PIXELES));
 //        setLocationRelativeTo(null);
         pack();
@@ -116,6 +117,12 @@ public class Ajedrez extends JFrame implements Runnable {
         botonesPiezas[i].addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                opcion = new JOptionPane();
+
+                ImageIcon imagenPieza = new ImageIcon(piezas[i].imagenPieza());
+                String n = (String) opcion.showInputDialog(null, "Posicion inicial: ", null, JOptionPane.INFORMATION_MESSAGE, imagenPieza, null, "");
+
+//              posicionInicial = (AQUI HAY Q CONVERTIR LA ENTRADA A VECTOR 2D);
                 piezaActual = piezas[i];
                 new Thread(esto).start();
             }
@@ -131,11 +138,4 @@ public class Ajedrez extends JFrame implements Runnable {
         }
     }
 
-//    private ImageIcon redimensionarImagen(ImageIcon imagen) {
-//
-//        Image image = imagen.getImage(); // transforma ImageIcon a image
-//        Image newimg = image.getScaledInstance(PIXELES, PIXELES+40, java.awt.Image.SCALE_DEFAULT);
-//        imagen = new ImageIcon(newimg);  // transforma  Image a imageIcon
-//        return imagen;
-//    }
 }
