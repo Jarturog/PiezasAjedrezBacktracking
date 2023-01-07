@@ -112,8 +112,9 @@ public abstract class Pieza {
         return false;
     }
 
-    public void iRecorrerTablero(Tablero t) {
+    public boolean iRecorrerTablero() {
         // transformación a iterativo
+        return false;
     }
 
     public void setPosicion(Vector2D pos) {
