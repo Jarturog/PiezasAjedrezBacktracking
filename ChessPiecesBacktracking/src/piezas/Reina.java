@@ -8,10 +8,6 @@ import elementosBidimensionales.Vector2D;
  */
 public class Reina extends Pieza {
 
-    public Reina(Vector2D posInicial) {
-        super(posInicial);
-    }
-
     @Override
     public Vector2D[] movimientos() {
         return new Vector2D[]{new Vector2D(1, 0), new Vector2D(1, 1),

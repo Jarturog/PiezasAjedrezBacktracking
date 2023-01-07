@@ -1,26 +1,20 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package elementosBidimensionales;
 
 import java.util.LinkedList;
-import java.awt.Graphics;
-import java.awt.Dimension;
 import java.awt.Color;
 import javax.swing.JPanel;
 import piezas.Pieza;
 
 /**
  *
- * @author jartu
+ * @author Arturo y Marta
  */
 public class Tablero extends JPanel {
 
     private final int DIMENSION = 8;
     private static final int MAXIMO = 800;
     private int casillasVisitadas;
-    private Casilla[] casillas;
+    private final Casilla[] casillas;
 
     public Tablero(int dimensiones) {
         casillas = new Casilla[dimensiones * dimensiones];
@@ -39,7 +33,6 @@ public class Tablero extends JPanel {
         }
     }
 
-
     private int getIndexCasilla(Vector2D v) {
         return v.getX() + v.getY() * DIMENSION;
     }
@@ -48,20 +41,16 @@ public class Tablero extends JPanel {
         return casillas[getIndexCasilla(posicion)];
     }
 
-    public void ocuparPosicion(Vector2D pos) throws Exception {
-        if (!isCasillaLibre(pos)) {
-            throw new Exception("Error ocupando una casilla que no está libre");
+    public void ocuparPosicion(Vector2D pos, boolean ocupar) throws Exception {
+        if (!isCasillaLibre(pos) == ocupar) {
+            throw new Exception("Error ocupando/desocupando una casilla");
         }
-        casillas[getIndexCasilla(pos)].setOcupada(true);
-        casillasVisitadas++;
-    }
-
-    public void desOcuparPosicion(Vector2D pos) throws Exception {
-        if (isCasillaLibre(pos)) {
-            throw new Exception("Error desocupando una casilla ya libre");
+        casillas[getIndexCasilla(pos)].setOcupada(ocupar);
+        if(ocupar){
+            casillasVisitadas++;
+        }else{
+            casillasVisitadas--;
         }
-        casillas[getIndexCasilla(pos)].setOcupada(false);
-        casillasVisitadas--;
     }
 
     public boolean isPosicionDelTablero(Vector2D futuraPosicion) {

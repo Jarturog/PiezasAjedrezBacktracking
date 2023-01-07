@@ -7,10 +7,6 @@ package elementosBidimensionales;
 public class Vector2D {
 
     private int x, y;
-    
-    public Vector2D(int p){
-        this.x = p;
-    }
 
     public Vector2D(int x, int y) {
         this.x = x;

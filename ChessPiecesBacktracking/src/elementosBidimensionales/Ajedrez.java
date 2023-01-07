@@ -31,7 +31,7 @@ public class Ajedrez extends JFrame implements Runnable {
     private final Ajedrez esto = this;
     private final Container panelContenidos;
     private final Tablero tablero;
-    private final int DIMENSIONES = 8;
+    private final static int DIMENSIONES = 8;
     private final static int PIXELES = 640;
     private final int NUM_PIEZAS = 7;
     private final JButton[] botonesPiezas = new JButton[NUM_PIEZAS];
@@ -39,8 +39,6 @@ public class Ajedrez extends JFrame implements Runnable {
 //    private final ImageIcon imagenAjedrez = new ImageIcon("Ajedrez.png");  NO E NECESARIO
     private final JPanel panelBotones;
     private JOptionPane opcion;
-
-    private final Vector2D posicionInicial = new Vector2D(DIMENSIONES / 2, DIMENSIONES / 2);
 
     public static void main(String[] args) throws Exception {
         try {
@@ -66,13 +64,13 @@ public class Ajedrez extends JFrame implements Runnable {
         panelBotones.setLayout(new GridLayout(1, 6));
 
         Pieza[] piezas = new Pieza[NUM_PIEZAS];
-        piezas[0] = new Peon(posicionInicial);
-        piezas[1] = new Torre(posicionInicial);
-        piezas[2] = new Caballo(posicionInicial);
-        piezas[3] = new Alfil(posicionInicial);
-        piezas[4] = new Reina(posicionInicial);
-        piezas[5] = new Rey(posicionInicial);
-        piezas[6] = new Peon(posicionInicial); // Especial
+        piezas[0] = new Peon();
+        piezas[1] = new Torre();
+        piezas[2] = new Caballo();
+        piezas[3] = new Alfil();
+        piezas[4] = new Reina();
+        piezas[5] = new Rey();
+        piezas[6] = new Peon(); 
 
         botonesPiezas[0] = new JButton("Peón");
         botonesPiezas[1] = new JButton("Torre");
@@ -132,10 +130,18 @@ public class Ajedrez extends JFrame implements Runnable {
     @Override
     public void run() {
         try {
-            piezaActual.recorrerTablero(tablero);
+            piezaActual.recorrerTableroEnTiempoReal(tablero);
         } catch (Exception ex) {
             System.err.println("Error malo" + ex.getMessage());
         }
+    }
+    
+    public static int getPixeles(){
+        return PIXELES;
+    }
+    
+    public static int getDimensiones(){
+        return DIMENSIONES;
     }
 
 }
