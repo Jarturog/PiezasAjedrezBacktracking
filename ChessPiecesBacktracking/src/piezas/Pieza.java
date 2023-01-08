@@ -132,10 +132,20 @@ public abstract class Pieza {
         }
     }
 
+
+
+
     public boolean recorrerTablero() throws Exception {
         return rRecorrerTablero(new LinkedList<Vector2D>(), new Vector2D(0, 0));
     }
 
+    /**
+     *
+     * @param solucion
+     * @param mov
+     * @return
+     * @throws Exception
+     */
     private boolean rRecorrerTablero(LinkedList<Vector2D> solucion, Vector2D mov) throws Exception {
         mover(mov, false); // mueve la pieza a la nueva posición
         solucion.push(new Vector2D(posicion)); // guarda la posición actual en la solución
@@ -145,7 +155,7 @@ public abstract class Pieza {
             Vector2D futuraPosicion = Vector2D.sumar(posicion, movimientos[indMov]);
             // si la casilla que ocuparía está libre y no se sale del tablero
             if (tablero.isPosicionDelTablero(futuraPosicion) && tablero.isCasillaLibre(futuraPosicion)) {
-                // si no ha recorrido todo el tablero
+                // si ha recorrido todo el tablero  
                 if (tablero.getCasillasVisitadas() > tablero.getNumCasillas() - 2) {
                     solucion.push(new Vector2D(futuraPosicion)); // guarda la posición final en la solución
                     visualizarMovimientos(solucion);
@@ -161,8 +171,38 @@ public abstract class Pieza {
         return false;
     }
 
-    public boolean iRecorrerTablero() {
-        // transformación a iterativo
+    /**
+     * Función de poda Determina si el movimiento es válido
+     *
+     * @param futuraPosicion que ocuparía la pieza
+     * @return true si la casilla que ocuparía está libre y no se sale del
+     * tablero
+     * @throws Exception
+     */
+    private boolean isValid(Vector2D futuraPosicion) throws Exception {
+        return tablero.isPosicionDelTablero(futuraPosicion) && tablero.isCasillaLibre(futuraPosicion);
+    }
+
+    public boolean iRecorrerTablero(Vector2D mov) throws Exception {
+        LinkedList<Vector2D> solucion = new LinkedList<>();
+        mover(mov, false);
+        // indMov es el índice que recorre los movimientos de la pieza
+        for (int indMov = 0; indMov < movimientos.length; indMov++) {
+            // se calcula la hipotética futura posición
+            Vector2D futuraPosicion = Vector2D.sumar(posicion, movimientos[indMov]);
+            // si el movimiento es válido y ha recorrido todo el tablero
+            if (isValid(futuraPosicion) && tablero.getCasillasVisitadas() > tablero.getNumCasillas() - 2) {
+                visualizarMovimientos(solucion);
+                return true;
+            } // si el movimiento es válido y aun no ha recorrido todo el tablero
+            else if (isValid(futuraPosicion) && tablero.getCasillasVisitadas() < tablero.getNumCasillas() - 2) {
+                solucion.push(new Vector2D(futuraPosicion)); // guarda la posición final en la solución
+            } else {  // si llega aquí es porque no era parte de la solución
+                solucion.pop(); // quita el movimiento de la solución
+                volverAtras(mov, false); // revierte el movimiento volviendo atrás
+
+            }
+        }
         return false;
     }
 
