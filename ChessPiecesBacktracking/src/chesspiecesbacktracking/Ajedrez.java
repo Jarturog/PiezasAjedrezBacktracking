@@ -9,6 +9,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -26,7 +28,7 @@ public class Ajedrez extends JFrame implements Runnable {
 
     private final static int DIMENSIONES = 8;
     private final static int PIXELES = 640;
-    
+
     private final int NUM_PIEZAS = 6; // aumentar cuando se añadan piezas
     private boolean recorriendoTablero;
     private Pieza piezaActual;
@@ -35,6 +37,7 @@ public class Ajedrez extends JFrame implements Runnable {
     private final Tablero tablero;
     private final JButton[] botonesPiezas;
     private final JPanel panelBotones;
+    private boolean iterativo;
 
     public static void main(String[] args) throws Exception {
         try {
@@ -58,7 +61,6 @@ public class Ajedrez extends JFrame implements Runnable {
 
         panelBotones = new JPanel();
         panelBotones.setBackground(Color.black);
-        panelBotones.setBackground(Color.black);
         panelBotones.setLayout(new GridLayout(1, NUM_PIEZAS));
         panelContenidos.add(panelBotones, BorderLayout.NORTH);
 
@@ -79,7 +81,7 @@ public class Ajedrez extends JFrame implements Runnable {
         piezas[4] = new Reina(tablero);
         piezas[5] = new Rey(tablero);
         // piezas[6] = new ---(tablero); para añadir una nueva pieza
-        
+
         for (int i = 0; i < NUM_PIEZAS; i++) {
             vincularAccion(i, piezas);
             botonesPiezas[i].setBackground(Color.black);
@@ -113,8 +115,8 @@ public class Ajedrez extends JFrame implements Runnable {
         botonesPiezas[i].addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(recorriendoTablero){
-                    JOptionPane.showMessageDialog(null, "No se puede recorrer el tablero varias veces a la vez","Prohibición", HEIGHT);
+                if (recorriendoTablero) {
+                    JOptionPane.showMessageDialog(null, "No se puede recorrer el tablero varias veces a la vez", "Prohibición", HEIGHT);
                     return;
                 }
                 boolean entradaErronea = true;
@@ -154,6 +156,12 @@ public class Ajedrez extends JFrame implements Runnable {
                         columna = (String) JOptionPane.showInputDialog(null, "Por favor, escribe un número entre 1 y " + DIMENSIONES + "):", null, JOptionPane.INFORMATION_MESSAGE, imagen, null, "");
                     }
                 }
+                // se pregunta al usuario el tipo de algoritmo que quiere usar
+                if (1 == JOptionPane.showConfirmDialog(null, "¿Quieres usar la versión recursiva? (en caso contrario se selecciona la iterativa)", "Elige el algoritmo a utilizar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)) {
+                    iterativo = false;
+                } else {
+                    iterativo = true;
+                }
                 piezaActual = piezas[i];
                 piezaActual.setPosicion(new Vector2D(coordX, coordY));
                 recorriendoTablero = true;
@@ -168,24 +176,22 @@ public class Ajedrez extends JFrame implements Runnable {
 
     @Override
     public void run() {
-        try {
-            if(piezaActual.recorrerTablero()){
-                Thread.sleep(5000);
-            }else{
-                JOptionPane.showMessageDialog(null, "No hay solución");
-            }
-            tablero.limpiar();
-            recorriendoTablero = false;
-        } catch (Exception ex) {
-            System.err.println("Error inesperado: " + ex.getMessage());
+        boolean solucion;
+        if (iterativo) {
+            solucion = piezaActual.iRecorrerTablero();
+        } else {
+            solucion = piezaActual.recorrerTablero();
         }
+        if (solucion) {
+            JOptionPane.showMessageDialog(null, "¡Hay solución!");
+        } else {
+            JOptionPane.showMessageDialog(null, "No hay solución");
+        }
+        tablero.limpiar();
+        recorriendoTablero = false;
     }
 
     public static int getPixeles() {
         return PIXELES;
-    }
-
-    public static int getDimensiones() {
-        return DIMENSIONES;
     }
 }
