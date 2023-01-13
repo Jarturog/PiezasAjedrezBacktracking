@@ -112,13 +112,13 @@ public abstract class Pieza {
         posicion = Vector2D.sumar(posicion, Vector2D.multiplicar(movimientoRealizado, -1));
     }
 
-    public void visualizarMovimientos(Stack<Vector2D> movimientos) {
-        posicion = movimientos.pop();
+    public void visualizarMovimientos(LinkedList<Vector2D> movimientos) {
+        posicion = movimientos.pollFirst();
         while (!movimientos.isEmpty()) {
             try {
                 dibujar(IMAGEN_CASILLA_VISITADA);
                 Thread.sleep(500);
-                posicion = movimientos.pop();
+                posicion = movimientos.pollFirst();
                 dibujar(imagenPieza());
                 Thread.sleep(500);
             } catch (InterruptedException ex) {
@@ -128,7 +128,7 @@ public abstract class Pieza {
     }
 
     public boolean recorrerTablero() {
-        return rRecorrerTablero(new Stack<Vector2D>(), new Vector2D(0, 0));
+        return rRecorrerTablero(new LinkedList<Vector2D>(), new Vector2D(0, 0));
     }
 
     /**
@@ -138,9 +138,9 @@ public abstract class Pieza {
      * @return
      * @throws Exception
      */
-    private boolean rRecorrerTablero(Stack<Vector2D> solucion, Vector2D mov) {
+    private boolean rRecorrerTablero(LinkedList<Vector2D> solucion, Vector2D mov) {
         mover(mov); // mueve la pieza a la nueva posición
-        solucion.push(mov); // guarda la posición actual en la solución
+        solucion.push(new Vector2D(posicion)); // guarda la posición actual en la solución
         // indMov es el índice que recorre los movimientos de la pieza
         for (int indMov = 0; indMov < movPosibles.length; indMov++) {
             // se calcula la hipotética futura posición
@@ -149,7 +149,7 @@ public abstract class Pieza {
             if (tablero.isPosicionDelTablero(futuraPosicion) && tablero.isCasillaLibre(futuraPosicion)) {
                 // si ha recorrido todo el tablero  
                 if (tablero.getCasillasVisitadas() > tablero.getNumCasillas() - 2) {
-                    solucion.push(mov); // guarda la posición final en la solución
+                    solucion.push(futuraPosicion); // guarda la posición final en la solución
                     visualizarMovimientos(solucion);
                     return true;
                 } else if (rRecorrerTablero(solucion, movPosibles[indMov])) { // en caso contrario sigue recorriendo el tablero
@@ -175,10 +175,11 @@ public abstract class Pieza {
         while (indMov > -1) {
             if (movRealizados[indMov] < movPosibles.length - 1) {
                 movRealizados[indMov]++;
-                if (isValid(Vector2D.sumar(posicion, movPosibles[movRealizados[indMov]]))) {
+                Vector2D futuraPosicion = Vector2D.sumar(posicion, movPosibles[movRealizados[indMov]]);
+                if (tablero.isPosicionDelTablero(futuraPosicion) && tablero.isCasillaLibre(futuraPosicion)) {
                     if (indMov > movRealizados.length - 3) {
                         mover(movPosibles[movRealizados[indMov]]);
-                        Stack<Vector2D> solucion = new Stack<Vector2D>();
+                        LinkedList<Vector2D> solucion = new LinkedList<Vector2D>();
                         Vector2D aux = new Vector2D(posicionInicial);
                         for (int i = 0; i < movRealizados.length - 1; i++) {
                             aux = Vector2D.sumar(aux, movPosibles[movRealizados[i]]);
@@ -204,14 +205,5 @@ public abstract class Pieza {
             }
         }
         return false;
-    }
-
-    private boolean isValid(Vector2D futuraPosicion) {
-        try {
-            return tablero.isPosicionDelTablero(futuraPosicion) && tablero.isCasillaLibre(futuraPosicion);
-        } catch (Exception ex) {
-            System.err.println("Error comprobando si es válido el siguiente movimiento de la pieza.");
-        }
-        return false; // en caso de que haya habido un error no es válido
     }
 }

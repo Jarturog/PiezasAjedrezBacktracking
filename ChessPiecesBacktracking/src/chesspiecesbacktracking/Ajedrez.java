@@ -157,7 +157,7 @@ public class Ajedrez extends JFrame implements Runnable {
                     }
                 }
                 // se pregunta al usuario el tipo de algoritmo que quiere usar
-                if (1 == JOptionPane.showConfirmDialog(null, "¿Quieres usar la versión recursiva? (en caso contrario se selecciona la iterativa)", "Elige el algoritmo a utilizar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)) {
+                if (0 == JOptionPane.showConfirmDialog(null, "¿Quieres usar la versión recursiva? (en caso contrario se selecciona la iterativa)", "Elige el algoritmo a utilizar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)) {
                     iterativo = false;
                 } else {
                     iterativo = true;
@@ -176,12 +176,14 @@ public class Ajedrez extends JFrame implements Runnable {
 
     @Override
     public void run() {
+        setTitle("Ajedrez (puede tardar calculando)");
         boolean solucion;
         if (iterativo) {
             solucion = piezaActual.iRecorrerTablero();
         } else {
             solucion = piezaActual.recorrerTablero();
         }
+        setTitle("Ajedrez");
         if (solucion) {
             JOptionPane.showMessageDialog(null, "¡Hay solución!");
         } else {
