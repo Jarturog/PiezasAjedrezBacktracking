@@ -1,6 +1,5 @@
 package piezas;
 
-import chesspiecesbacktracking.Ajedrez;
 import tablero.Vector2D;
 import tablero.Tablero;
 import java.util.LinkedList;

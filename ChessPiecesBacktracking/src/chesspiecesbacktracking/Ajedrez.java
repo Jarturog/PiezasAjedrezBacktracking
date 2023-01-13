@@ -46,6 +46,14 @@ public class Ajedrez extends JFrame implements Runnable {
             System.out.println("No se ha podido establecer el formato de su plataforma" + e.getMessage());
         }
         Ajedrez aj = new Ajedrez(); // nuevo ajedrez
+//        for (int i = 0; i < DIMENSIONES; i++) {
+//            for (int j = 0; j < DIMENSIONES; j++) {
+//                System.out.println(i+"\n"+j);
+//                aj.piezaActual = new Rey(aj.tablero, PIXELES/DIMENSIONES);
+//                aj.piezaActual.setPosicion(new Vector2D(i, j));
+//                aj.run();
+//            }
+//        }
     }
 
     public Ajedrez() {
@@ -183,7 +191,7 @@ public class Ajedrez extends JFrame implements Runnable {
      */
     @Override
     public void run() {
-        setTitle("Ajedrez (puede tardar calculando)");
+        setTitle("Ajedrez (puede tardar horas calculando)");
         boolean solucion;
         if (iterativo) {
             solucion = piezaActual.recorrerTableroIterativo();
