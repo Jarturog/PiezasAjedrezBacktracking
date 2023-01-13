@@ -76,7 +76,7 @@ public class Tablero extends JPanel {
      * una casilla que está fuera del tablero, que no existe.
      */
     public Casilla getCasilla(Vector2D posicion) throws IndexOutOfBoundsException {
-        if(!isPosicionDelTablero(posicion)){
+        if (!isPosicionDelTablero(posicion)) {
             throw new IndexOutOfBoundsException("Intentando acceder a una casilla que está fuera del tablero y que por lo tanto es inexistente. ");
         }
         return casillas[getIndexCasilla(posicion)];
@@ -95,36 +95,72 @@ public class Tablero extends JPanel {
      * quiere desocupar una casilla
      */
     public void ocuparPosicion(Vector2D pos, boolean ocupar) {
-        int suma = 1; // se inicializa suma a 1
-        if (!ocupar) { // en caso de que se vaya a desocupar una casilla se asigna -1
-            suma = -1; // para restar en vez de sumar una casilla visitada
+        int suma;
+        if (ocupar) {
+            suma = 1; // si se quiere ocupar se inicialzia a 1
+        } else {
+            suma = -1; // en caso de que se vaya a desocupar una casilla se asigna -1
         }
-        getCasilla(pos).setOcupada(ocupar); //
-        casillasVisitadas += suma;
+        getCasilla(pos).setOcupada(ocupar); // se ocupa/desocupa
+        casillasVisitadas += suma; // se aumenta/disminuye la cantidad de casillas visitadas
     }
 
+    /**
+     * Indica si la posición pasada por parámetro está dentro del tablero.
+     *
+     * @param posicion Vector2D que representa la posición que ocuparía la
+     * casilla si estuviera dentro del tablero.
+     * @return true si una casilla corresponde a esa posición, false si la
+     * posición no forma parte del tablero.
+     */
     public boolean isPosicionDelTablero(Vector2D posicion) {
         return !(posicion.getX() > DIMENSIONES - 1
                 || posicion.getY() > DIMENSIONES - 1
                 || posicion.getX() < 0 || posicion.getY() < 0);
     }
 
-    public boolean isCasillaLibre(Vector2D pos) throws IndexOutOfBoundsException {
+    /**
+     * Comprueba si una casilla está ocupada o no.
+     *
+     * @param pos posición que corresponde la casilla.
+     * @return true si no está ocupada, false si l oestá.
+     */
+    public boolean isCasillaLibre(Vector2D pos) {
         return !getCasilla(pos).estaOcupada();
     }
 
+    /**
+     * Getter de las dimensiones.
+     *
+     * @return entero que representa las filas y las columnas.
+     */
     public int getDIMENSIONES() {
         return DIMENSIONES;
     }
 
+    /**
+     * Getter del número de casillas que tiene el tablero.
+     *
+     * @return el número de casillas totales que tiene el tablero.
+     */
     public int getNumCasillas() {
         return DIMENSIONES * DIMENSIONES;
     }
 
+    /**
+     * Getter del número de casillas visitadas en el momento.
+     *
+     * @return entero entre 0 y getNumCasillas() incluidos.
+     */
     public int getCasillasVisitadas() {
         return casillasVisitadas;
     }
 
+    /**
+     * Quita las piezas y las marcas de ocupado de las casillas además de
+     * ponerlas a no ocupadas y por lo tanto la cantidad de casillas visitadas a
+     * 0.
+     */
     public void limpiar() {
         for (Casilla casilla : casillas) {
             casilla.setIcon(null);

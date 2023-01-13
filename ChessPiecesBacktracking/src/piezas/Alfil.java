@@ -9,8 +9,8 @@ import tablero.Vector2D;
  */
 public class Alfil extends Pieza {
 
-    public Alfil(Tablero t) {
-        super(t);
+    public Alfil(Tablero t, int tam) {
+        super(t, tam);
     }
 
     @Override

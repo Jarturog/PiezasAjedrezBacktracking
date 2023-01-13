@@ -9,8 +9,8 @@ import tablero.Vector2D;
  */
 public class Peon extends Pieza {
 
-    public Peon(Tablero t) {
-        super(t);
+    public Peon(Tablero t, int tam) {
+        super(t, tam);
     }
     
     @Override
