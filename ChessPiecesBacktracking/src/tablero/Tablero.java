@@ -1,6 +1,7 @@
 package tablero;
 
 import java.awt.Color;
+import java.awt.GridLayout;
 import javax.swing.JPanel;
 
 /**
@@ -34,6 +35,7 @@ public class Tablero extends JPanel {
      */
     public Tablero(int dimensiones) {
         DIMENSIONES = dimensiones;
+        setLayout(new GridLayout(dimensiones, dimensiones));
         casillas = new Casilla[dimensiones * dimensiones];
         boolean blanco = true;
         for (int i = 0; i < dimensiones; i++) {

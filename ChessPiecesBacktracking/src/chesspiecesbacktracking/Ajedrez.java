@@ -26,18 +26,19 @@ import piezas.*;
  */
 public class Ajedrez extends JFrame implements Runnable {
 
-    private final static int DIMENSIONES = 8; // dimensiones tablero
+    private final static int DIMENSIONES = 5; // dimensiones tablero
     private final static int PIXELES = 640; // tamaño ventana
 
     private final int NUM_PIEZAS = 6; // aumentar cuando se añadan piezas
     private boolean recorriendoTablero; // true si lo recorre, false si no
     private Pieza piezaActual; // pieza con la que se va a recorrer el tablero
+    private boolean iterativo; // true si se ha elegido iterativo, false si recursivo
+
     private final Ajedrez instancia; // la propia instancia para pasársela al hilo
     private final Container panelContenidos; // panel contenedora de panelBotones y tablero
     private final Tablero tablero; // tablero contenedor de las casillas
     private final JButton[] botonesPiezas; // enlaza los botones a sus respectivas piezas
     private final JPanel panelBotones; // contenedor de botonesPiezas
-    private boolean iterativo; // true si se ha elegido iterativo, false si recursivo
 
     public static void main(String[] args) throws Exception {
         try {
@@ -46,25 +47,16 @@ public class Ajedrez extends JFrame implements Runnable {
             System.out.println("No se ha podido establecer el formato de su plataforma" + e.getMessage());
         }
         Ajedrez aj = new Ajedrez(); // nuevo ajedrez
-//        for (int i = 0; i < DIMENSIONES; i++) {
-//            for (int j = 0; j < DIMENSIONES; j++) {
-//                System.out.println(i+"\n"+j);
-//                aj.piezaActual = new Rey(aj.tablero, PIXELES/DIMENSIONES);
-//                aj.piezaActual.setPosicion(new Vector2D(i, j));
-//                aj.run();
-//            }
-//        }
     }
 
     public Ajedrez() {
-        instancia = this;
-        recorriendoTablero = false;
+        instancia = this; // necesario para crear el hilo al clicar un botón
+        recorriendoTablero = false; // todavía no se recorre el tablero
         setTitle("Ajedrez");
         panelContenidos = getContentPane();
         panelContenidos.setLayout(new BorderLayout());
 
         tablero = new Tablero(DIMENSIONES);
-        tablero.setLayout(new GridLayout(DIMENSIONES, DIMENSIONES));
         panelContenidos.add(tablero, BorderLayout.CENTER);
 
         panelBotones = new JPanel();
@@ -81,7 +73,7 @@ public class Ajedrez extends JFrame implements Runnable {
         botonesPiezas[5] = new JButton("Rey");
         // botonesPiezas[6] = new JButton("---"); para añadir una nueva pieza
 
-        int tamanyoPieza = PIXELES / DIMENSIONES;
+        int tamanyoPieza = PIXELES / DIMENSIONES; // tamaño en píxeles de altura y anchura
         Pieza[] piezas = new Pieza[NUM_PIEZAS];
         piezas[0] = new Peon(tablero, tamanyoPieza);
         piezas[1] = new Torre(tablero, tamanyoPieza);
@@ -121,64 +113,61 @@ public class Ajedrez extends JFrame implements Runnable {
      * presionar el botón del mismo índice.
      */
     private void vincularAccion(int i, Pieza[] piezas) {
-        botonesPiezas[i].addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (recorriendoTablero) { // no se puede recorrer el tablero dos veces a la vez
-                    JOptionPane.showMessageDialog(null, "No se puede recorrer el tablero varias veces a la vez", "Prohibición", HEIGHT);
-                    return;
+        botonesPiezas[i].addActionListener((ActionEvent e) -> {
+            if (recorriendoTablero) { // no se puede recorrer el tablero dos veces a la vez
+                JOptionPane.showMessageDialog(null, "No se puede recorrer el tablero varias veces a la vez", "Atención", HEIGHT);
+                return;
+            }
+            boolean entradaErronea = true; // se inicializa el booleano que indica si hay que seguir preguntando por una fila/columna correcta
+            ImageIcon imagen = new ImageIcon(piezas[i].imagenPieza()); // imagen de la pieza
+            // variable input es lo que escribe el usuario
+            String input = (String) JOptionPane.showInputDialog(null, "Fila donde comienza (1 - " + DIMENSIONES + "):", null, JOptionPane.INFORMATION_MESSAGE, imagen, null, "");
+            int numFila = 0; // la fila
+            while (entradaErronea) { // seguirá en el bucle mientras no pueda convertir el String a número
+                if (input == null) { // si se ha cancelado el proceso
+                    return; // no sigue
                 }
-                boolean entradaErronea = true; // se inicializa el booleano que indica si hay que seguir preguntando por una fila/columna correcta
-                ImageIcon imagen = new ImageIcon(piezas[i].imagenPieza()); // imagen de la pieza
-                // variable input es lo que escribe el usuario
-                String input = (String) JOptionPane.showInputDialog(null, "Fila donde comienza (1 - " + DIMENSIONES + "):", null, JOptionPane.INFORMATION_MESSAGE, imagen, null, "");
-                int numFila = 0; // la fila
-                while (entradaErronea) { // seguirá en el bucle mientras no pueda convertir el String a número
-                    if (input == null) { // si se ha cancelado el proceso
-                        return; // no sigue
-                    }
-                    try {
-                        numFila = Integer.parseInt(input); // se convierte a número
-                        if (numFila < 1 || numFila > DIMENSIONES) {
-                            throw new NumberFormatException();
-                        } // si no salta la excepción es que ha ido bien
-                        numFila--; // se resta 1 para pasarlo a índice (que empieza por 0 y no por 1)
-                        entradaErronea = false; // deja de ser errónea
-                    } catch (NumberFormatException ex) {
-                        input = (String) JOptionPane.showInputDialog(null, "Por favor, escribe un número entre 1 y " + DIMENSIONES + "):", null, JOptionPane.INFORMATION_MESSAGE, imagen, null, "");
-                    }
+                try {
+                    numFila = Integer.parseInt(input); // se convierte a número
+                    if (numFila < 1 || numFila > DIMENSIONES) {
+                        throw new NumberFormatException();
+                    } // si no salta la excepción es que ha ido bien
+                    numFila--; // se resta 1 para pasarlo a índice (que empieza por 0 y no por 1)
+                    entradaErronea = false; // deja de ser errónea
+                } catch (NumberFormatException ex) {
+                    input = (String) JOptionPane.showInputDialog(null, "Por favor, escribe un número entre 1 y " + DIMENSIONES + "):", null, JOptionPane.INFORMATION_MESSAGE, imagen, null, "");
                 }
-                // se vuelve a repetir el proceso
-                entradaErronea = true;
-                input = (String) JOptionPane.showInputDialog(null, "Columna donde comienza (1 - " + DIMENSIONES + "):", null, JOptionPane.INFORMATION_MESSAGE, imagen, null, "");
-                int numColumna = 0;
-                while (entradaErronea) {
-                    if (input == null) { // si se ha cancelado el proceso
-                        return; // no sigue
-                    }
-                    try {
-                        numColumna = Integer.parseInt(input); // se convierte a número
-                        if (numColumna < 1 || numColumna > DIMENSIONES) {
-                            throw new NumberFormatException();
-                        } // si no salta la excepción es que ha ido bien
-                        numColumna--; // se resta 1 para pasarlo a índice (que empieza por 0 y no por 1)
-                        entradaErronea = false; // deja de ser errónea
-                    } catch (NumberFormatException ex) {
-                        input = (String) JOptionPane.showInputDialog(null, "Por favor, escribe un número entre 1 y " + DIMENSIONES + "):", null, JOptionPane.INFORMATION_MESSAGE, imagen, null, "");
-                    }
+            }
+            // se vuelve a repetir el proceso
+            entradaErronea = true;
+            input = (String) JOptionPane.showInputDialog(null, "Columna donde comienza (1 - " + DIMENSIONES + "):", null, JOptionPane.INFORMATION_MESSAGE, imagen, null, "");
+            int numColumna = 0;
+            while (entradaErronea) {
+                if (input == null) { // si se ha cancelado el proceso
+                    return; // no sigue
                 }
-                // se pregunta al usuario el tipo de algoritmo que quiere usar
-                iterativo = 0 != JOptionPane.showConfirmDialog(null, "¿Quieres usar la versión recursiva? (en caso contrario se selecciona la iterativa)", "Elige el algoritmo a utilizar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-                piezaActual = piezas[i]; // asigna la pieza con la que se recorrerá
-                // el tablero a la variable global para que el método run() pueda saber la pieza
-                piezaActual.setPosicion(new Vector2D(numFila, numColumna)); // se indica las posiciones iniciales
-                recorriendoTablero = true; // se está recorriendo
-                try { // el hilo recorre el tablero. Es necesario crear la variable instancia ya que dentro del 
-                    new Thread(instancia).start(); // actionPerformed 'this' no hace referencia a la instancia de Ajedrez.
-                } catch (IllegalThreadStateException ex) {
-                    System.err.println("Error creando hilo para recorrer tablero: " + ex.getMessage());
-                    recorriendoTablero = false; // si ha habido un error permite recorrer el tablero.
+                try {
+                    numColumna = Integer.parseInt(input); // se convierte a número
+                    if (numColumna < 1 || numColumna > DIMENSIONES) {
+                        throw new NumberFormatException();
+                    } // si no salta la excepción es que ha ido bien
+                    numColumna--; // se resta 1 para pasarlo a índice (que empieza por 0 y no por 1)
+                    entradaErronea = false; // deja de ser errónea
+                } catch (NumberFormatException ex) {
+                    input = (String) JOptionPane.showInputDialog(null, "Por favor, escribe un número entre 1 y " + DIMENSIONES + "):", null, JOptionPane.INFORMATION_MESSAGE, imagen, null, "");
                 }
+            }
+            // se pregunta al usuario el tipo de algoritmo que quiere usar
+            iterativo = 0 != JOptionPane.showConfirmDialog(null, "¿Quieres usar la versión recursiva? (en caso contrario se selecciona la iterativa)", "Elige el algoritmo a utilizar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            piezaActual = piezas[i]; // asigna la pieza con la que se recorrerá
+            // el tablero a la variable global para que el método run() pueda saber la pieza
+            piezaActual.setPosicion(new Vector2D(numFila, numColumna)); // se indica las posiciones iniciales
+            recorriendoTablero = true; // se está recorriendo
+            try { // el hilo recorre el tablero. Es necesario crear la variable instancia ya que dentro del
+                new Thread(instancia).start(); // actionPerformed 'this' no hace referencia a la instancia de Ajedrez.
+            } catch (IllegalThreadStateException ex) {
+                System.err.println("Error creando hilo para recorrer tablero: " + ex.getMessage());
+                recorriendoTablero = false; // si ha habido un error permite recorrer el tablero.
             }
         });
     }

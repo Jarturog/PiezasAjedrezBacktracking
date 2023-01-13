@@ -171,8 +171,12 @@ public abstract class Pieza {
             Vector2D futuraPosicion = Vector2D.sumar(posicion, movPosibles[indMov]);
             // si la casilla que ocuparía está libre y no se sale del tablero
             if (tablero.isPosicionDelTablero(futuraPosicion) && tablero.isCasillaLibre(futuraPosicion)) {
-                // si ha recorrido todo el tablero  
+                // si ha recorrido todo el tablero    
                 if (tablero.getCasillasVisitadas() > tablero.getNumCasillas() - 2) {
+                    // -2 en vez de -1 porque la posición que ocupará futuraPosicion
+                    // no se ha indicado todaavía en el número total de casillas, y
+                    // si se deja con -1 hará otra llamada recursiva en la que al estar
+                    // todas las casillas ocupadas no entrará en el caso base porque no pasará isValid()
                     solucion.push(futuraPosicion); // guarda la posición final en la solución
                     visualizarPosiciones(solucion);
                     return true;
@@ -214,6 +218,12 @@ public abstract class Pieza {
                 if (tablero.isPosicionDelTablero(futuraPosicion) && tablero.isCasillaLibre(futuraPosicion)) {
                     // se comprueba si ha encontrado solución (además de recorrer todo el árbol)
                     if (indMov > movRealizados.length - 3) {
+                        // -3 en vez de -2 porque la posición que ocupará futuraPosicion
+                        // no se ha indicado todaavía en el número total de casillas, y
+                        // si se deja con -2 hará otra llamada recursiva en la que al estar
+                        // todas las casillas ocupadas no entrará en el caso base porque no pasará isValid()
+                        // y -2 y no -1 por el mismo motivo por el que se comprueba lo siguiente de la manera en la que lo hace
+                        // en líneas anteriores: (movRealizados[indMov] < movPosibles.length - 1)
                         mover(movPosibles[movRealizados[indMov]]); // mueve por última vez la pieza
                         // se crea un LinkedList en el que se almacenarán las posiciones que ha ocupado la pieza
                         LinkedList<Vector2D> solucion = new LinkedList<Vector2D>();
